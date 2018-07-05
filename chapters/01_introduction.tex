@@ -5,36 +5,38 @@
 
 Curiosity is one of our main drives. Even in babies the desire to model the world help them endure  many of the difficulties of exploring it. A baby might stumble, fall, burn or get scratched but still  continue to be relentlessly curios trying to construct a useful model of the world. An important part of this model is understanding and recognizing other people. This comes from the fact that humans are fundamentally social animals. Our ability to communicate with each other in a sophisticated way sets us apart from all other animals. The first step of this communication occurs before we even open our mouths when we recognize each other physically gauge each others posture and detect other non-verbal clues. Recognizing other people enables us respond to each others actions, cooperate or compete with each other. This is so central to our lives that it is unimaginable to operate in a world without this ability. 
 
-The ability to perform spatial reasoning of objects in a scene is crucial for performing any complex function especially if this function is related to other people inhabiting the same space. Recognizing human posture and motion is equally if not more important for robots which inhabit the same physical space with us. This makes it a critical problem for Computer Vision and Robotics. The long held vision where we have robots in our houses assisting in housework, cleaning and cocking even helping us take care of our elderly all need this ability to work.
+The ability to perform spatial reasoning of objects and people in a scene is crucial for performing any complex function. Recognizing human posture and motion is equally if not more important for robots which inhabit the same physical space with us. This makes it a critical problem for Computer Vision and Robotics. The long held vision where we have robots in our houses assisting in housework, cleaning and cocking even helping us take care of our elderly all need this ability to function properly.
 
 Additionally, as the aspect of having artificially intelligent agents becomes more realistic we discover many more applications where recognizing human pose is an urgent necessity. Autonomously driving cars need to recognize the actions of pedestrians around them in order to operate intelligently. Many autonomous driving systems require the driver to be alert while the car is driving itself. Monitoring the driver and controlling his alertness and health is also important. Robots working in a manufacturing plant hand in hand with people need to accurately detect and recognize the body posture and motion of people around them. There are also many practical applications which would benefit from such a technology such as virtual and augmented reality. This shows again that artificial intelligent systems which depend on human interactions in a physical medium need to have Human Pose Estimation as part of their system.
 
-Our body conveys a lot of information about our actions and well being as well. There are so many suttle  clues from the way we sit to the pace of our walk about our personality and health. Our posture can give clues about our level of confidence, whether we cross our arms or show our hands sends signals that we are protective or open in a given situation. Our body also gives many signals relating to our health through our motions. Many illnesses relating to balance can be recognised by analyzing the way a person walks. Many of our insights also depend on our ability to measure and record them. Recognizing the human body in a computational medium opens up a whole new area of applications. Having large scale accurate quantitative metrics about human motion is posed to give rise to advances in our understanding about human motion which can be useful in sports analysis, kinematic modeling in animation and robotics. 
+Our body conveys a lot of information about our actions and well being as well. There are so many subtle  clues from the way we sit to the pace of our walk about our personality and health. Our posture can give clues about our level of confidence, whether we cross our arms or show our hands sends signals that we are protective or open in a given situation. Our body also gives many signals relating to our health through our motions. Many illnesses relating to balance can be recognised by analyzing the way a person walks. Many of our insights also depend on our ability to measure and record them. Recognizing the human body in a computational medium opens up a whole new area of applications. Having large scale accurate quantitative metrics about human motion is posed to give rise to advances in our understanding about human motion which can be useful in sports analysis, kinematic modeling in animation and robotics. 
 
-In this thesis we focused on developing a human pose estimation system clinical gate analysis. Gate analysis is a fundemental technique for diagnosing vertigo and balance disorders. Many illnesses originating from psychological disorders, or disorders relating brain,ear,eye disfunction can manifest themselves in a person's gait. Reaching a diagnosis in balance realated illnesses is difficult and requires a variaty of test ranging from vide-occulography to gait analysis. Some critical and fatal conditions like brain strokes can manifest themselves in a person's gait. This makes the availability of this kind of diagnosis tool an important tool.
+In this thesis we focused on developing a human pose estimation system in clinical gate analysis. Gate analysis is a fundamental technique for diagnosing vertigo and balance disorders. Many illnesses originating from disorders relating to brain,ear,eye dysfunction or psychological disorders can manifest themselves in a person's gait. Reaching a diagnosis in balance related illnesses is difficult and requires a variety of tests ranging from video oculography to gait analysis. Some critical and fatal conditions like brain strokes can be observed through a gait test. This makes the availability of this kind of diagnosis tool important.
 
-The dataset that we developed our application for was created by the administration of a gait analysis test in the German Center for Vertigo and Balance Disorders (DSGZ) during its regular operation over 11 years. The test consisted of 8 tasks which where usually repeated a few times. In each task the patient would walk on the Gait-right pressure carpet performing a certain action. Actions include, self-paced walk, slow walk, fast walk, walking with eyes closed, walking with a reclined head, walking while making calculations and walking by doing a verbal task. The Gait-right carpet is collecting gait statistics like stride length, stride width and stride frequncy. These statistics are normalized with respect to age. The resulting data is reported based on how many standard devaitions the statistics are apart from compared to a healthy person's meassurement as a matrix where each column corresponds to a meassurement and each row to a task. An example of a Z-Matrix can be seen below. From now on we will refer to this dataset as the gait dataset.
+The dataset that we developed our application for was created by the administration of a gait analysis test in the German Center for Vertigo and Balance Disorders (DSGZ) during its regular operation over 11 years. The test consisted of 8 tasks which where usually repeated a few times. In each task the patient would walk on the Gait-right pressure carpet performing a certain action. Actions include, self-paced walk, slow walk, fast walk, walking with eyes closed, walking with a reclined head, walking while making calculations and walking while doing a verbal task. The Gait-right carpet is collecting gait statistics like stride length, stride width and stride frequency. These statistics are normalized with respect to age and gender. The resulting data is reported based on how many standard deviations the statistics are apart from compared to a healthy person's measurement as a matrix where each column corresponds to a measurement and each row to a task. An example of a Z-Matrix can be seen below. From now on we will refer to this dataset as the gait dataset.
 
-The gait dataset consist of gait meassurements together with a webcam recording of
+The gait dataset consist of both gait statistics calculated from the pressure carpet and a web-cam footage of the gait sequence. Our aim in this thesis was to utilize the monocular video data to estimate the gait parameters. The gait footage is captured from roughly the direction of the pressure carpet. This makes the distance estimation and therefore the gait statistics calculations a significant problem. An example of the footage can be seen in Figure 2.
 
-HPE is the wild
+There has been many deep learning based successful 2D pose estimation techniques in recent years that work in challenging everyday settings [],some even in multi person pose estimation scenarios[]. The availability of large annotated datasets played an important role in advancing this field. However, 2D poses are inherently ambiguous because an arbitrary camera viewpoint can make totally different poses look similar or some body part or objects can occlude the view from others. To illustrate you can think of a scenario where whether the person is facing towards of away from the camera cannot be determined just by looking at a 2D projection. Look at Figure 3 for an example. Altough, 3D pose estimation doesn't suffer from these shortcomings it is a more difficult problem. Mainly, obtaining large quantities of annotated 3D poses requires a motion capture setup which becomes difficult and costly to setup and the visual data in the labarotary setup is very constraint. In order to make a successful pose estimation, a model has to be invariant to a number of factors like background scenes, lighting clothing shape and texture, skin color and image imperfection. Models trained on these datasets have a hard time generalizing to in-the-wild scenarios.
 
-Upcycling the gate data
+Our approach is to decouple the problem of 3D pose estimation from a monocular image to 2D pose estimation from monocular image and lifting the pose from 2D to 3D. This approach has several advantages. 
+* Fitstly, 2D pose estimation methods like [Cao, ...] perform very well on in-the-wild scenarios where there exists large annotated datasets like MPII and MS-COCO. This enables us to perform high quality 2D pose estimations from gait sequence videos.
+* Secondly, it is possible to train a 2D to 3D pose estimator for arbitrary camera viewpoints and distances. This is accoplished through projecting the 3D annotated joint positions to the required camera positions.
+* Thirdly, this makes the problem remarkably simpler and allows for a greater range of solutions to be explored.
 
-2D pose estimation methods are very robust, even in multi person pose estimation scenarios.
-The field is very mature in this area
-However 2D poses are inherently ambiguous because an arbitrary
-camera viewpoint can make totally different poses look similar
+In order to estimate the gait parameters we used [Cao. et. al.]'s pose estimator to obtain 2D pose sequences. This method was the best performing multi person pose estimation methods available. These formed the fundamental building block for the reamining models. We trained several 2D-3D pose estimators to obtain accurate 3D poses from different viewpoints and distances. One first model is using feed forward network with resudual connections in a frame by frame basis. The second model is exploiting temporal information by using a synchronized sequence to sequence network. The third model is using additional height information together with a loss function which preserves the lengths of the bones. We train models for both 3D to Z-matrix estimation and 2D to Z-matrix estimation and compared the results.
 
-3D pose estimation is known to be very challenging in in-the-wild scenarios due to the difficulties 
-of obtaining ground truth data. 
+There are several contributions of this work. First we train a network which estimates 3D human pose from different viewpoints and distances. This enables us to estimate 3d human poses in in-the-wild  scenarios which was not possible with previous methods. Secondly we show that exploiting both  temporal information and skeletal structural priors imporoves pose estimation results significantly. Lastly we use our last model to infer 3D pose from our gait data and estimated their corresponding z-matrices.
 
-In order to go from an image to a 3D pose, an algorithm has to be invariant to a number of factors, including background scenes, lighting clothing shape and texture, skin color and image imperfections, among others. 
+\section{Problem Definition}
 
-Our approach in this thesis is utilizes 2D poses obtained from [Cao et. al.]'s open pose. 
-And train a 3D pose estimator which uses 2D poses.
-This can be trained to work in arbitrary camera viewpoints and distances. 
-Because 2D data is abundant and obtaining a working 2D-3D pose estimator is easy.
+\subsection{Scope}
+
+\subsection{Data}
+
+For training 3D pose estimation methods we used the Human3.6M [] and MPII-inf [] datasets. Human3.6M is the largest publicly available dataset for 3D pose estimation
+
+\section{Method Outline}
 
 Methodology, we trained a 2D-3D pose estimator and trained it to obtain accurate 3D poses
 from different viewpoints and distances. One first model is using feed forward network with 
@@ -51,14 +53,5 @@ Lastly we use our last model to infer 3D pose from our gait data to estimate the
 We observe that the way the error is reported in the literature obfuscates the actual error observed in real life scenarios.
 Various normalization schemes altough usefull in reducing the overall reported error can be detremental in real life scenarios 
 when the data distribution is different than the data distribution observed in the training data.
-
-\section{Problem Definition}
-Citation test~\parencite{latex}.
-
-\subsection{Scope}
-
-\subsection{Data}
-
-\section{Method Outline}
 
 \section{Thesis Organization}
