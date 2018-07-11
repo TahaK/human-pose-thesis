@@ -3,9 +3,9 @@
 
 \chapter{Related Works}\label{chapter:relatedworks}
 
-The ability to perform spatial reasoning in a scene is a critical step for performing complex functions. Estimating human pose from a 2D image can be thought as problem related to detecting the position of the joints in the image plane and predicting the depth of each joint. Keypoint detection and depth estimation are two important parts of spatial reasoning and are well established fields of Computer Vision. 
+The ability to perform spatial reasoning in a scene is a critical step for performing complex functions. Estimating human pose from a 2D image can be thought as problem related to detecting the position of the joints in the image plane and predicting the depth of each joint. Key point detection and depth estimation are two important parts of spatial reasoning and are well established fields of Computer Vision. 
 
-Geoetrical reasoning on how 3D to 2D projections are related have been explored with the lens of estimating lengths and distance ratios between objects in the scene \parencite{criminisi2000single} and estimating the geometric structure of the scene using line segments \parencite{lee2009geometric}. These show that regular sturctures like line segments and prior information on parallel stuctures contain a lot of valuable information about depth and perspective. Depth estimation from monocular cues like texture \parencite{lindeberg1993shape}, shading \parencite{zhang1999shape} and learning based approaches which combine them \parencite{saxena2006learning} are also important areas of research. More recently Supervised Deep Learning based methods have been using monocular cues which outperform all previous methods \parencite{eigen2014depth}, \parencite{eigen2015predicting}, \parencite{liu2015deep}, \parencite{liu2016learning}. These methods illustrate that visual information in the form of monocular cues also contain valuable information which can be used for depth estimation. There is also another line of research which utilizes stereo cameras with geometric consistency priors in an Unsupervised Deep Learning framework which are giving very promising results \parencite{garg2016unsupervised}, \parencite{godard2017unsupervised}. These show that depth can be perceived from matching of keypoints and disparity calculations. 
+Geometrical reasoning on how 3D to 2D projections are related have been explored with the lens of estimating lengths and distance ratios between objects in the scene \parencite{criminisi2000single} and estimating the geometric structure of the scene using line segments \parencite{lee2009geometric}. These show that regular structures like line segments and prior information on parallel structures contain a lot of valuable information about depth and perspective. Depth estimation from monocular cues like texture \parencite{lindeberg1993shape}, shading \parencite{zhang1999shape} and learning based approaches which combine them \parencite{saxena2006learning} are also important areas of research. More recently Supervised Deep Learning based methods have been using monocular cues which outperform all previous methods \parencite{eigen2014depth}, \parencite{eigen2015predicting}, \parencite{liu2015deep}, \parencite{liu2016learning}. These methods illustrate that visual information in the form of monocular cues also contain valuable information which can be used for depth estimation. There is also another line of research which utilizes stereo cameras with geometric consistency priors in an Unsupervised Deep Learning framework which are giving very promising results \parencite{garg2016unsupervised}, \parencite{godard2017unsupervised}. These show that depth can be perceived from matching of key points and disparity calculations. 
 
 Although, human vision uses a combination of lower level processes like depth perception and higher level processes like object recognition, higher level processes play a much more important role when building mental object representations and models of hierarchical organization of visual processing \parencite{bulthoff1998top}. Familiar 3D structures can be matched to 2D projections even when there are conflicting depth cues. This gives motivation to pursue a line of study in human 3D pose estimation which only rely on joint positions and structural priors. 
 
@@ -13,7 +13,7 @@ The related works section is divided into three parts. First part discusses the 
 
 \section{Pose Representation}
 
-There is a variaty of spatio temporal representation methods for 3D human poses. Humans visual perception of 3D human poses is not better than state-of-the-art Computer Vision algoriths when calculated in conventional metrics. Humans recognize and re-enact 3D human poses with 10-20 degree or 100 mm per joint error \parencite{marinoiu2013pictorial}. This shows that the way human pose is represented and the way the error metrics are calculated are still open problems.
+There is a variety of spatio-temporal representation methods for 3D human poses. Humans visual perception of 3D human poses is not better than state-of-the-art Computer Vision algorithms when calculated in conventional metrics. Humans recognize and re-enact 3D human poses with 10-20 degree or 100 mm per joint error \parencite{marinoiu2013pictorial}. This shows that the way human pose is represented and the way the error metrics are calculated are still open problems.
 
 \subsection{Kinematic Tree}
 
@@ -25,189 +25,63 @@ This approach represents the pose as a combination of known poses. The dictionar
 
 \subsection{Model-free}
 
-Regressing the joint positions directly has become more popullar in the recent work which use Deep Learning models , \parencite{pavlakos2017coarse}, \parencite{martinez2017simple}, \parencite{hossain2017exploiting}, \parencite{tekin2017learning}. These methods are much more simpler in the pose representation and rely on the Deep Learning models to learn the structural information in the human body. One downside of this methods is the lack of stuctural priors can lead the model to make anthropometricly invalid 3D pose estimations.
+Regressing the joint positions directly has become more popular in the recent work which use Deep Learning models , \parencite{pavlakos2017coarse}, \parencite{martinez2017simple}, \parencite{hossain2017exploiting}, \parencite{tekin2017learning}. These methods are much more simpler in the pose representation and rely on the Deep Learning models to learn the structural information in the human body. One downside of this methods is the lack of structural priors can lead the model to make anthropometrically invalid 3D pose estimations.
 
 \section{2D Pose Estimation}
 
-Since our solution pipeline starts with estimating 2D poses from monocular images we will discuss the prominent techniques in this area. 2D pose estimation aims to localize certain number of joints in the image. This inforomation although ambigious on its own can be used in later stages to estimate the full 3D pose of the person.
+Since our solution pipeline starts with estimating 2D poses from monocular images we will discuss the prominent techniques in this area. 2D pose estimation aims to localize certain number of joints in the image. This information although ambiguous on its own can be used in later stages to estimate the full 3D pose of the person.
 
 One of the most prominent results in 2D pose estimation have been obtained by Newell et. at \parencite{newell2016stacked}. He uses repeated top-down and bottom-up processing steps in conjunction with intermediate supervision to achieve very strong results. Each block in the network is called hourglass and consists of encoding and decoding layers. Each hourglasses are stacked on top of each other and refine each other's output. The whole architecture is trained end-to-end.
 
-Many mehtods build on top of the Stacked Hourglass model. \parencite{chu2017multi} use Conditional Random Fields to associate neighbouring regions and body part attention model to impose global consistency of the body. \parencite{chou2017self} uses adveserial training to give a meaningfull structural priors for the body poses. The discriminator helps the model reject invalid joints angles and anthropometricly invalid poses.
+Many methods build on top of the Stacked Hourglass model. \parencite{chu2017multi} use Conditional Random Fields to associate neighboring regions and body part attention model to impose global consistency of the body. \parencite{chou2017self} uses adversarial training to give a meaningful structural priors for the body poses. The discriminator helps the model reject invalid joints angles and anthropometrically invalid poses.
 
-\parencite{iqbal2017posetrack} and \parencite{insafutdinov2017arttrack} attempted estimating the pose for multiple people in  videos. Both approaches are closely related but differ in the type of body-part proposals and the structure of the spatio-temporal graph where Iqbal et. al. relies on [deepercut] for body-part detectors Insafutdinov et. al. use person-conditioned model that is trained to associate body parts of a specific person already at the detection stage. 
+\parencite{iqbal2017posetrack} and \parencite{insafutdinov2017arttrack} attempted estimating the pose for multiple people in  videos. Both approaches are closely related but differ in the type of body-part proposals and the structure of the spatio-temporal graph where Iqbal et. al. relies on \parencite{insafutdinov2016deepercut} for body-part detectors Insafutdinov et. al. use person-conditioned model that is trained to associate body parts of a specific person already at the detection stage. 
 
-\parencite{cao2016realtime} utilized a CNN based model similar to the Stacked Hourglass model where they refine their predictions in multiple steps. They added another branch to the model which predicts Part Affinity Fields (PAFs). This enables multi-person pose estimation by predicting associon fields between joints. PAFs are later used to match the joints in a bottom-up process. This algorithm can run in real-time on commodity hardware.
+\parencite{cao2016realtime} utilized a CNN based model similar to the Stacked Hourglass model where they refine their predictions in multiple steps. They added another branch to the model which predicts Part Affinity Fields (PAFs). This enables multi-person pose estimation by predicting association fields between joints. PAFs are later used to match the joints in a bottom-up process. This algorithm can run in real-time on commodity hardware.
 
 \section{3D Pose Estimation}
 
-There are several streams of work for estimating 3D human pose given an image.
-The first of these involves extracting features from the image and learning a func-
-tion to map the features into 3D pose [1, 14, 15, 56, 77, 82, 107, 117]. Another
-stream of work involves using deep networks to predict 3D pose from an image
-directly by training the network end-to-end. [63, 65, 73, 81, 85, 87, 96, 112, 116,
-118–120, 133]. Some work uses the 2D human pose from image and learns to
-back-project these 2D joint locations into 3D [2, 16, 62, 76, 90, 92, 122, 132, 134].
-The 2D joint locations may either be ground truth or detected from an image us-
-ing any 2D human pose detector. Some approaches have tried to formulate the
-task of 3D pose estimation as a retrieval or similarity search problem. These tech-
-niques use different image features or 2D pose to lookup into a large database
-of exemplar 3D pose descriptor [22, 41, 53, 78, 103, 128]. Others have tried to
-predict 3D pose from a sequence of images trying to exploit the temporal infor-
-mation from the sequence [4, 29, 74, 117, 134]. Additionally, some techniques
-leverage multiple views from different cameras to estimate the 3D pose, thereby
-making the task much easier [3, 10, 18, 31, 86, 106]. Finally, there are a number
-of approaches which uses depth images provided by RGB-D camera for 3D pose
-estimation [7, 102, 104, 124, 129]. The image from RGB-D camera has an extra
-depth channel giving depth of different objects in the image, along with the RGB
-channels. With the added depth information, these methods can estimate 3D pose
-with a high accuracy in real time. However, the downside of RGB-D cameras is
-that they have limited range and do not work well in outdoor settings.
-18Below we will discuss the different streams of addressing the problem of 3D
-human pose estimation, mentioned above, in detail.
-
-\subsection{3D Pose estimation by extracting features from single image}
-
-Most of the earlier methods of 3D pose estimation from monocular images aimed at
-extracting discriminative features from images. A good feature for 3D Pose estima-
-tion should be invariant to lighting, texture, background scenes, human skin color
-etc. Agarwal and Triggs [1] encoded image silhouette shapes in a histogram-of-
-shape-contexts descriptor [11, 12] and used it to recover 3D pose using non-linear
-regression. Although silhouettes are invariant to texture and lighting, it requires
-very good segmentation of the human in the image. Mori and Malik [77] used
-shape context [12] which represents a shape using a set of sample points from
-the contours of an object. They created a database of a number of exemplar 2D
-views of human body, with joints labeled, under different camera configuration
-and viewpoint. They used shape context matching technique [12] to match a test
-image with the exemplar images and used the 2D joint locations from the exem-
-plar and the test shape to estimate 3D pose using the method of Taylor [115]. Bo
-et al. [15] built an algorithm that makes learning conditional Bayesian Mixture of
-Experts models [109] faster and more scalable that can handle one order magni-
-tude more data and is one order magnitude faster. They combined forward feature
-selection and bound optimization contrary to backward feature selection used in
-original work and compared the performance of SIFT [68], histogram of shape
-contexts [12] and multi-scale hyper-feature encodings [54]. Similarly, image fea-
-tures like Histogram-of-gradients (HOG) [25, 68] and HMAX [28] were used by
-Bo et al. [14] to create a Twin Gaussian Process model and use Gaussian Process
-Regression to estimate the 3D Pose. Ning et al. [82] designed an image descriptor
-of their own called the Appearance and Position Context (APC) descriptor. They
-learned visual bag of words using unsupervised clustering and then jointly learned
-a distance metric for each visual word and Bayesian mixture of experts model using
-labeled image-to-pose pairs, which is then used to regress 3D pose. Simo-Serra et
-al. [107] proposed a method to jointly infer 2D pose and 3D pose using a Bayesian
-model which combines generative latent variables constraining the space of all pos-
-sible 3D pose with 2D location of joints using HOG-based discriminative model.
-Kostrikov et al. [56] swept along each plane through 3D volume of potential 3D
-joint locations and used a regression forest to predict the relative 3D position of
-joint given the hypothesized depth and then use mixture of 3D pictorial structure
-models (PSM) [34] to infer 3D pose in global coordinate space.
-The major drawback of these methods is that their accuracy is bounded by the
-discriminative properties of the features and robustness to different factors. Most
-often, these features are not discriminative enough to give accurate estimation of
-depth. Since the advent of deep networks, feature-based techniques have lost their
-popularity because deep networks can learn sophisticated features which produce
-excellent results.
-
-\subsection{Using features to look up in a database of exemplar 3D poses}
-
-Several methods have used the features extracted from the images to find the near-
-est neighbour pose from a large database of exemplar 3D poses. Shakhnarovich et
-al. [103] used a shape context feature vector to represent general contour shapes
-and use the features to learn a set of hashing functions which can be used effi-
-ciently look up and find the nearest-neighbor pose from a database of 3D poses.
-The shape context feature vector from an image is also used by Mori and Ma-
-lik [78] in conjunction with a kinematic chain-based deformation model to match
-a stored 2D view of human body with labelled 2D pose. Once they obtain 2D pose,
-they use Taylor’s method [115] to estimate 3D pose. Jiang [53] also used Taylor’s
-algorithm [115] to generate all possible 3D pose given the 2D pose of an image
-thereby forming a hypothesis pose. They used a kd-tree to find approximate near-
-est neighbour of these hypothesis pose from a large database of exemplar poses.
-Gupta et al. [41] create a large database of fixed length 2D tractories called v-
-trajectories using orthographic projection of unlabelled motion capture data. They
-extract dense trajectories feature from vidoes and match the video trajectories to
-v-trajectories using Non-linear Circular Temporary Encoding to retrieve appropri-
-ate motion capture data. Gupta et al. [42] extended their method [41] to retrieve
-a portion of longer mocap sequence and temporally align them with features re-
-trieved from a short sequence using Dynamic Time Warping(DTW) [89]. Yasin et
-20al. [128] use two separate training sources. The first source is a large database
-of motion capture data which is projected onto a normalized 2D pose space using
-virtual cameras, while the second source is images with labeled 2D poses which
-are used to learn pictorial structure model (PSM) [33] for 2D pose estimation. The
-predicted 2D pose from PSM [33] is used to retrieve the nearest normalized 2D
-pose using kd-tree search and the final 3D pose is estimated my minimizing the
-reprojection error. On the other hand, Chen and Ramanan [22] used a CNN to es-
-timate the 2D pose from an image and then use the predicted 2D pose to match a
-library of 3D pose to estimate the depth.
-A major drawback of exemplar-based 3D pose estimation is that the time re-
-quired to match the correct 3D pose from a large database is quite high. This pro-
-hibits any real time implementation. Moreover, the performance of these methods
-largely depends on the range of poses available in the database. It is also diffi-
-cult to align the retrieved 3D pose with the actual orientation of the person in the
-image [42].
+There are many different approaches to 3D human pose estimations. Recently some methods use Deep Neural Networks to estimate the 3D pose directly from images \parencite{pavlakos2017coarse}, \parencite{tekin2016structured}, \parencite{varol2017learning}, \parencite{rogez2016mocap}. Some models have tried to formulate the problems as a retrieval task. Similar poses are search from a dictionary and then combined or refined to get the final pose []. Another line of research uses either ground truth 2D poses or estimates from a 2D pose estimator to train a model that lifts the 2D poses to 3D. Other methods use additional information besides the given image like temporal information [] or structural priors []. We will discuss these methods in more detail below.
 
 \subsection{Deep network trained end-to-end}
 
-As mentioned before, deep networks have become extremely popular in many com-
-puter vision tasks. However, these models require large amount of data to succeed.
-It is difficult and expensive to collect motion capture data. There is still a lack of
-dataset of 3D poses for people in the wild since 3D data acquisition requires spe-
-cial motion camera with markers and complex laboratory setup. However, since the
-introduction of Human3.6M dataset [20, 51], which contains 3.6 million high res-
-olution images with annotated 2D and 3D data, there are a number of methods that
-employ deep networks being trained end-to-end to predict 3D pose from images.
-One of the earliest approaches to use deep networks was by Li et al [63]. They pro-
-posed a convolutional neural network (CNN) [57, 60, 61] that jointly learns to re-
-gresses 3D human pose and detect body parts in 2D given a monocular image. The
-network was initially pre-trained for body parts detection and then jointly trained
-for both tasks. Similar to [63], Park et al. [85] designed a CNN which is jointly
-trained for both 3D pose regression and 2D pose estimation. They treated the 2D
-pose estimation task as a classification problem for each joint where they divide the
-image into n n grids. Each grid is considered as a class for each joint. They clas-
-sified each joint as belonging to any of the n 2 classes. Tekin et al. [116] first trained
-a de-noising auto-encoder [121] to learn a high-dimensional latent encoding of 3D
-pose. Then they trained a CNN to map the image into latent representation learned
-by the auto-encoder. Then they stacked the decoding layers of auto-encoder on
-top of the CNN to regress 3D pose and fine-tuned the entire network end-to-end.
-Tekin et al. followed up their earlier work in [118], where they fuse latent features
-learned from images and their corresponding 2D joint heatmaps. Their network
-learns when two fuse the features from the two sources. Mehta et al. [73] used
-transfer learning to transfer the knowledge learned from 2D pose estimation task
-for in-the-wild images to estimate 3D pose. They do so by first training Resnet-
-101 [44] for 2D pose estimation task and then used the learned weight of up to
-level 5 of ResNet-101 to build a network that outputs 3D joint locations and as
-an auxiliary task predict 2D heatmaps for each joint. This idea of exploiting 2D
-pose ground truth information on in-the-wild images was also adopted by Sun et
-al. [112]. They modified Resnet-50 [44], pre-trained on ImageNet [57], to predict
-3D joint locations from both images with and without 3D ground truth. When the
-3D ground truth is missing, the depth coordinate is set to zero. Zhou et al. [133]
-designed a CNN which predicts the motion parameters of the kinematic tree of hu-
-man skeleton and then added a kinematic layer on top of it to convert the motion
-parameters and skeleton information into 3D joint locations. The loss is defined on
-the joint location and since kinematic layer is differentiable, they could train the
-network end-to-end. Varol et al. [120] argued that a CNN which is trained to pre-
-dict 3D human pose from synthetic images can effectively and accurately predict
-3D pose from real images. Likewise, Rogez and Schmid [96] developed a syn-
-thesis engine which generates synthetic images given real image and use them to
-augment the database with more data. Then a CNN is trained on both real and syn-
-thetic data. Pavlakos et al. [87] also develops an end-to-end CNN based model to
-predict 3D pose. They extended the popular 2D pose detector by Newell et al. [80]
-called stacked-hourglass to predict volumetric heatmaps for each joint instead of
-predicting 2D heatmaps. Their method used to be the state-of-the-art before be-
-ing surpassed by our first and third networks. Tome et al. [119] also used a similar
-idea of extending a 2D pose estimator to reason in 3D. They extended the Convolu-
-22tional Pose Machine(CPM) by Wei et al. [123], which iteratively refines 2D poses
-from the knowledge of the image and estimation from previous iteration. Tome et
-al. [119] modified this architecture by introducing a probabilistic 3D pose layer
-which lifts the predicted 2D heatmaps to 3D pose and projects them back into im-
-age plane to generate a set of projected pose heatmaps. The projected 2D heatmaps
-and the predicted 2D pose heatmaps are then fused together in a fusion layer and
-passed onto the next stage. The fused heatmap from the final stage is used to lift
-into 3D pose using the probabilistic 3D pose model and the entire system is trained
-end-to-end. Nie et al. [81] separately encoded the ground truth 2D pose and image
-patches surrounding the joint locations into skeleton LSTM and Patch LSTM. Both
-the networks have a kinematic tree structure defined which is broadcast throughout
-the whole skeleton. They predict the depth by integrating the outputs from skele-
-ton LSTM and patch LSTM into another LSTM which predicts depth of each joint.
+The emergence of the Human3.6M \parencite{ionescu2014human3} enabled the use of end-to-end trained Deep Learning models to estimate 3D human poses direcly from images. Although these methods rely on a laboratory setup which doesn't generalize well to the in-the-wild scenes algorithmic innovation has shown many advances. The Human3.6M database benchmark has been constantly imporoving eversince.
+
+Pavlakos et al. \parencite{pavlakos2017coarse} predicts volumetric heatmaps for the joints and uses an interative refinement strategy to imporove the heatmaps. Tekin et. al. \parencite{tekin2016structured} tries to the problem of anthropometrically invalid poses by training a de-noising auto-encoder encode the human pose in an embedding. The auto-encoder is stacked on top of a Convolutional Neural Network and later fine tuned together end-to-end.
+
+Another line of research focuses of synthesizing novel frames by augmentation. Varol et. al. \parencite{varol2017learning}showed sthat learning from synthetic scenes can be effective in especcially when combined with real scenes to predict depth and body segmentation. \parencite{rogez2016mocap} generated synthetic images by blending real images  together and showed that this techniques improves prediction accuracy.
+
+Following sections show methods which improve the direct estimation methods by utilizing cobined training of 2D and 3D poses, temporal information or structural priors.
+
+\subsection{Pose Dictionaries}
+
+Some approaches utilize a 3D pose dictionary to look up similar poses. This can take the form of an embedding or collection of joint positions which are then refined using an optimization mechanism.
+
+Rogez et. al. \parencite{rogez2017lcr} build an anchor-pose dictionary by clustering a subset of the training images. A region porposal network \parencite{ren2015faster} network outputs anchor-pose proposals given an image. Another network scores the anchor-poses in one branch by a classification loss and refines them in another branch using a regession loss. Finally the refined and scored anchor poses are integrated to give the 3D pose estimate.
+
+Zhou et. al. \parencite{zhou2016sparseness} use a Convolutional Neural Network to estimate a sequence of joint heatmaps and use the Expectation-Maximization algorithm to estimate the 3D pose out of a 3D pose dictionary. 
+
+In \parencite{chen20173d} Chen et. al. assume the conditional independance of 3D pose from the image given the 2D pose. This makes their solution a 2 part solution. They estimate the 2D pose with a Convolutional Neural Network and use a Non-parametric Nearest Neighbor model to match the 2D pose to a known 3D pose. 
+
+The accuracy of these models depend on the size of the Pose Dictionary. No matter how large the pose dictionary there will be still unobserved poses on the tail end of the pose distribution. This makes making inference and finding a large enough dictionary prohibitively expensive.
+
+\subsection{2D Information}
+
+2D Pose estimation has seen incredible progress in recent years \parencite{cao2016realtime}, \parencite{newell2016stacked}, \parencite{iqbal2017posetrack}. 2D pose estimation is a necesary part of 3D pose estimation which lead many reasearches to either use 2D pose estimation as an additional supervision signal or decouple the two problems and use the 2D poses as input to the 3D pose estimation problem. Both methods have shown remarkable improvements over the baseline since they can eddectively utilize the abundant 2D pose datasets. 
+
+Park et. al. \parencite{park20163d} used a Deep Learning model which estimatmates both 2D and 3D pose. While the 3D pose estimation is formulated as a regression problem the 2D pose estimation is formulated as a classification problem where the image is tiled into grids and each joint is classified to one grid. The search space for 3D pose is much larger which prevents the use of the grid tiling. The network has a Convolutional Neural Network architecture where it branches out in the fully connected layers into two parts. The 3D joint locations are predicted by combining multiple candidate poses which act as an ensemble mechanism.
+
+Tekin et. al. \parencite{tekin2017learning} use a Convolutional Neural Network to estimate 2D confidance maps for each jont. Those confidence maps and the original image are fed into 2 branches of a Convolutional Neural Network and their feature maps are fused together to estimate the final 3D pose. A similar machanism is performed by Tome et. al. \parencite{tome2017lifting}. Their approaches differ mainly in that Tome et. al. doesn't seperate 2D pose estimation to a seperate branch. They use a iterative refining mechanism similar how \parencite{newell2016stacked} used where in each stage they predict 2D confidence maps for the joints, estimate 3D pose from those, project the 3D pose into 2D and fuse the projected 2D pose estimate with the 2D confidence map and apply a reprojection error. After the iterative refinement the lifting operation which gives the final 3D pose. Nie et. al. \parencite{nie2017monocular} train 2 networks seperately a Skeleton Long-Short Term Memory Network \parencite{hochreiter1997long} which estimates global 3D pose given 2D pose and a Patch Long-Short Term Memory Network which given image patches around the joints estimates the depth of those joints. The two network are later integrated in the second layer Long-Short Term Memory Network by combining the output of the two and estimating the depth of the joints. The architecture has a multi-task with depth prediction loss and 2D pose estimation loss which enables the use of in-the-wild 2D pose databases. 
+
+Moreno et. al. \parencite{moreno20173d} uses the output of a off-the-shelf 2D pose detector as input. This has the advantage of profoundly simplifying the estimation process. First they compute the Euclidian Distance Matrix (EDM) which encodes the distances between each joint. The EDM is fed into a Convolutional Neural Network which estimates a Euclidian Distance Matrix for 3D pose. This is used to predict the 3D joint locations using Multidimentional Scaling. Martinez et. al. \parencite{martinez2017simple} follow a similar approach where they use the output of a off-the-shelf 2D pose detector. The train a simple 4 layer feed-forward neural network with residual connections to lift the 2D pose into 3D. This simplifies the training procedure immensely without loosing the accuracy benefits and enables them to accurately estimate the pose in images which are visually demanding.
+
+\subsection{Temporal Information}
+
+\parencite{hossain2017exploiting}
+\parencite{hossain2017understanding}
+
+Lin et. al. \parencite{lin2017recurrent} utilizes an iterative refinement mechanism using Long-Short Term Memory Networks (LSTM) \parencite{hochreiter1997long}. This enables them to both utilize temporal information and use the critical refinement strategy which many of the state-of-the-art methods rely on heavily. They designed a 2D pose module which estimates image dependant pose representations the feature maps are passed to both a feature adaptation module which lift the feature maps to 3d and to the next stage through convolutional filters. 
+
 Lin et al. [65] predicts 3D pose from an image directly and refines them in multiple
 stages using LSTM [48]. Each stage has a 2D pose module which learns a two di-
 mensional pose-aware feature map that encodes information of human body pose.
@@ -216,81 +90,6 @@ mensional common embedding space for 2D and 3D pose. The adapted feature is
 concatenated with the hidden states of the LSTM and 3D pose detection from the
 previous stage and is passed as input to the LSTM of current stage to predict the
 3D pose in the current refinement stage.
-Although most of these systems trained end-to-end from images generate good
-results for 3D pose, it is not clear whether the error stems from the visual features
-learned by the network or from the mapping of the 2D pose or features in 2D into
-3D pose.
-
-\subsection{3D Pose Estimation from 2D pose}
-
-The task of inferring 3d joint locations from their 2d projections can be traced
-back to the classic work of Lee and Chen [62]. They showed that, given the bone
-lengths, the problem boils down to a binary decision tree where each split cor-
-respond to two possible states of a joint with respect to its parent. A common
-approach to estimating 3D joint locations given 2D pose is to separate the camera
-23pose variability from the intrinsic deformation of human body, the latter of which
-is modeled by learning an overcomplete dictionary of basis 3D poses from a large
-database of 3D human pose [2, 16, 92, 122, 132, 134]. A valid 3D pose is defined
-by a sparse linear combination of the bases and by transforming the points using
-transformation matrix representing camera extrinsic parameters.
-Here S  R 3 p is a set of 3D locations of p joints, B i  R 3 p is a basis pose and c i is
-its corresponding coefficient. There are k bases in total. These approaches model
-the 3D to 2D projection as weak perspective projection, the equation of which is
-Where  is the set of 3D locations of p joints, as given by eq. 2.1, W 
-R 2 x p denotes 2D pose of p joints, R   R 2 xx 3 and T   R 2 are camera rotation and
-translation parameters respectively. The coefficients of the bases and the camera
-extrinsic parameters are estimated by minimizing the reprojection error which is
-given by the following loss function:
-Here W  R 2 x p is the ground truth 2D locations for p joints and the rest of the
-symbols are same as defined in Eq. 2.1 and 2.2
-Ramakrishna et al. [92] were the first to propose the idea of representing 3D
-human pose as a sparse linear combination of bases and estimate the camera intrin-
-sics and coefficients of the bases by minimizing reprojection error function. They
-obtained the basis pose using PCA on a database of exemplar 3D poses. Wang et
-al. [122] followed the same vein as [92] but instead of minimizing the L2-norm of
-reprojection error, they minimized L1-norm and imposed limb length constraints
-on the output pose. Akhter and Black [2] imposed a joint angle limit constraint for
-certain joints after estimating the sparse coefficients and camera extrinsic. Since
-24rotation matrices are restricted within a set SO(3), the resulting objective function
-is non-convex. Zhou et al. [132] proposed a method to relax certain conditions
-to approximate convexity for the optimization of rotation matrix. The method is
-extended by same authors [134], where they imposed temporal smoothness con-
-straint during optimization. They also designed a CNN to predict 2D heatmaps for
-each joint, giving the likelihood of presence of joint in that location. When the
-ground truth 2D pose is not available, they used Expectation-Maximization (EM)
-algorithm [26] to estimate 3D pose from the detected heatmaps.
-Bogo et al. [16] used the 2D joint heatmaps from a CNN-based 2D pose detec-
-tor to predict both 3D pose and the 3D shape of human body. Their body model
-is defined as a function parameterized by coefficients of shape prior, pose parame-
-ters defined by kinematic tree model (See Section 2.1) and translation parameters.
-They minimize five different error terms: joint-based error defined by re-projection
-error under weak perspective projection, three pose priors and a shape prior. Rad-
-wan et al. [90] applied self-occlusion reasoning step over off-the-shelf 2D pose
-detector to remove noise in 2D pose estimation. Then they projected an arbitrary
-3D model onto the 2D joints and applied geometric and kinematic constraint to re-
-move ambiguity. Then they generated some synthetic views using the pose distri-
-butions and applied a structure from motion step to estimate the appropriate depth.
-On the other hand, Moreno-Nouger [76] first computed a N x N distance matrix
-,called Euclidean Distance Matrix (EDM), from the detected 2D pose where N is
-the number of joints. Then they designed a CNN-based network to estimate the
-Euclidean Distance Matrix for 3D pose. Then they convert the predicted EDM into
-3D joint locations using a Multidimensional Scaling (MDS) approach [13].
-Our first and third model are inspired from the idea of decoupling the task
-of 3D pose into the 2D pose estimation using an off-the-shelf 2D pose estimator
-and then learning a model to map 2D pose into 3D. We aim to analyze whether
-the error for 3D pose estimation stems from noisy pose detections or from lifting
-2D features to 3D. We observed empirically that decoupling makes the task of 3D
-pose estimation much easier than training a deep network end-to-end. We also
-observed that the task of lifting 2D poses into 3D can be done with very high
-accuracy given the ground truth 2D pose by using a simple deep network model.
-We believe it is difficult for a network trained end-to-end to perform well in this
-25case, because it needs to learn to extract image features which invariant to lighting,
-texture, background scenes, human skin color etc. and at the same time lift those
-features in 2D space to 3D. Moreover, the lack of in-the-wild datasets for 3D pose
-may also be another factor which makes training the networks end-to-end difficult
-because of the lack of variation in the scenes.
-
-\subsection{Exploiting temporal information}
 
 Estimating 3D pose per frame may cause jitter because the error in pose estimation
 for each frame is independent of one another. A natural extension would be to
@@ -329,65 +128,12 @@ roneous than other frame. We expect that the temporal information will distribut
 the error in pose estimation smoothly over the sequence reducing jitter and overall
 improvement in results.
 
-\subsection{Exploiting multiple views}
+\subsection{Structrual Priors}
 
-As discussed previously, acquiring motion capture data requires a complex labora-
-tory setup and is expensive. It requires markers, multiple motion capture camera
-and multiple high resolution RGB cameras. The motivation of using multiple views
-of different cameras for 3D pose estimation is to make the data acquisition process
-cheaper so that it does not require motion capture cameras or markers to be placed
-on subject’s body and that the data can be acquired even in the outdoors. The ad-
-ditional views should intuitively make the task of 3D pose estimation easier since
-certain body parts in one view may be self-occluded in one view but visible clearly
-in another view.
-A number of works have proposed using multiple cameras to estimate 3D pose.
-Sigal et al. [106] modeled human body as a collection of loosely-connected body
-parts in an undirected graphical model where the nodes represent body parts and
-edges represent a kinematic relationship between them. They imposed kinematic
-and penetration constraints using statistical models learned from motion capture
-data and use Particle Message Passing (PAMPAS) [52], a type of particle filter
-that can be applied over a graph containing loops, to infer 3D pose and motion
-from multi-view images with a set of calibrated camera. Amin et al. [3] extends
-pictorial structures model for 2D pose estimation to a multi-view model which per-
-forms joint reasoning over 2D poses from multiple view to estimate the 3D pose.
-27The same idea of using a multi-view pictorial structure for 3D pose estimation was
-used by Burenius et al. [18]. They additionally imposed view, skeleton, joint angle
-and intersection constraints. 3D multi-view pictorial structures was also used by
-Belagiannis et al. [10]. The used geometric constraints of triangulation of body
-joints from multiple views to estimate the 3D pose. On the other hand, Elhayek et
-al. [31] used a CNN-based network to estimate unary potentials for each joint of
-a kinematic tree model of skeleton which are used to extract pose constraints by
-probabilistically sampling from a pose posterior model. They combined the sam-
-pled constraints with an appearance-based similarity term and to track the articu-
-lated joint angles from multiple views. Pavlakos et al. [86] used the CNN-based
-stacked-hourglass model for 2D pose estimation to estimate 2D pose from multiple
-views and combined them using 3D pictorial structure model to obtain a volumetric
-heatmap of 3D joint uncertainties.
-
-\subsection{Exploiting depth information}
-
-With the availability of RGB-D cameras like Microsoft Kinect, a number of sys-
-tems tried to exploit the additional depth information along with the RGB image.
-Wei et al. [124] formulated the 3D pose estimation problem as a registration prob-
-lem in Maximum A Posteriori (MAP) estsimation framework. They integrated the
-depth data, person silhouette, full-body geometry, temporal pose prior and occlu-
-sion reasoning in a unified MAP estimation framework and combine 3D tracking
-with 3D pose estimation. Baak et al. [7] combined local optimization and global
-retrieval methods to build a robust 3D pose estimator. They used a variant of Djjk-
-stra’s algorithm to extract pose features from depth channel and later fused the lo-
-cal and global pose estimates using sparse Hausdoff distance. Shotton et al. [104]
-modeled 3D pose estimation problem as a per pixel classification problem which
-classifies the pixels as belonging to a specific body part. They used depth compar-
-ison features from depth image and used random forest classifier to classify each
-pixel and generated a confidence-scored 3D proposal for different body joints by
-reprojecting the classification results and finding local modes. Ye and Yang [129]
-embedded articulated deformation model with exponential-map parameters into a
-Gausian Mixture model for the task of 3D pose estimation. They also developed a
-28shape adaptation algorithm using the same probabilistic model used for pose esti-
-mation. Shafaei and Little [102] used multiple views from multiple depth cameras.
-They applied image segmentation to depth images and used curriculum learning
-to train their pose estimation system on synthetic data. The 3D joint locations are
-recovered by combining information from multiple views in real time. Although,
-depth information from depth cameras can give us valuable cue for 3D pose esti-
-mation, one major drawback of depth cameras is that it works poorly in outdoor
-settings.
+\parencite{bogo2016keep}
+Bogo et al. [16] used the 2D joint heatmaps from a CNN-based 2D pose detec-
+tor to predict both 3D pose and the 3D shape of human body. Their body model
+is defined as a function parameterized by coefficients of shape prior, pose parame-
+ters defined by kinematic tree model (See Section 2.1) and translation parameters.
+They minimize five different error terms: joint-based error defined by re-projection
+error under weak perspective projection, three pose priors and a shape prior. 
