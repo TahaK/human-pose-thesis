@@ -86,44 +86,24 @@ Hossain et. al. \parencite{hossain2017exploiting}, \parencite{hossain2017underst
 
 \subsection{Structrual Priors}
 
-3D pose estimation is an ill-posed problem since it the 2D projection of a 3D pose is not unique. The given information  
+3D pose estimation is an ill-posed problem since the 2D projection of a 3D pose is not unique. If we assume that there are 17 joints in the body as it is depicted in the Human3.6M dataset \parencite{ionescu2014human3} there are 51 datapoints that we need to estimate to get a 3D pose. However, the set of 2D joint locations contain 34 datapoints. So in one sense we have more unknowns than constraints. Fundamentally this can be thought as the suorce of the ambiguity. One approach to counteract this ambiguity it to introduce additional constraints which realte to the skeletal structure. Some of the known qualities of the human skeleton are:
+\begin{itemize}
+    \item Some key-points in the human body like joints are connected with bones whose lenght is constant throughout a pose sequence
+    \item Bone lenghts adhere to the anthropometric proportions, which can be statistically estimated.
+    \item There are limits to the degree of freedom that some joints have, like the knee and elbow joints.
+    \item There are limits to the amount each joint can rotate.
+    \item Some key points in the human body are on the same bone structure and act as parts of a rigid body. Like eyes, ears, nose, top of the head which all locate on the head and move together.
+    \item Human body has a left-right symmetry. This means bone lenghts of the left side of the body are the same to the bone lenghts in the right side of the body.
+\end{itemize}
 
-\parencite{zhou2016deep}
+All these qualities act as additional constraints to the 3D pose estimation problem. Considering these properties can aid in estimating valid and plausible 3D poses.
 
-\parencite{chen2017adversarial}
-\parencite{wan2017deepskeleton}
-\parencite{fang2018learning}
-\parencite{sun2017compositional}
+Earlier work \parencite{barron2001estimating}, \parencite{wei2009modeling} used these constraint in an optimization framework to estimate the 3D pose given 2D joint positions. More recently Zhou et. al. \parencite{zhou2016deep} used a differanciable kinematic object model to represent the human pose. They used a standard Convolutional Neural Network to estimate motion parameters which are fed to a kinematic layer which estimates joint locations. Since the kinematic transformation is differanciable the whole model is trained end-to-end. They show that using a kinematic model gives 4,7\% reduction in avarage joint error. A similar approach was developed by Fang et. al. \parencite{fang2018learning} where they used known relations between joints called Pose Grammers namely Symmetry Grammar which enforces the left and right sides of the body are symmetric, Kinematic Grammar which encorporates kinematic relation between joints and Motor Coordination Grammar which enforces locomotion patterns between the right and left side of the body. They use 2D joint positions as input similar to Martinez et. al. \parencite{martinez2017simple} and use Bidirectional Recurrent Neural Neworks \parencite{schuster1997bidirectional} to model grammars. Show that this constrains imporove the prediction accuracy by a large margin. Sun et. al. \parencite{sun2017compositional} reparametrizes the pose representation to take the bones into the center. Traditionally the human body is represented as a set of joints where the hip joint is located at the origin and all other joints are located with respect to the hip joint. They orginize the joints in a tree like fashion where each joint has only one parent but can have multiple children. The bone corresponding to a joint is defined based on the parent's position. This compositionality is also reflected in the loss function. They show that by defining the loss as the relationship between all joint pairs they can effectively model the skeletal structure and reduce the per joint error. 
 
-\parencite{mehta2017single}
-\parencite{kanazawa2017end}
-\parencite{dabral2017structure}
-\parencite{huang2017towards}
+Another approach to skeleton modeling is using Deep Netorks to train an embedding that represents the manifold of valid poses. Chen et. al. \parencite{chen2017adversarial} used a Generative Adveserial Networks \parencite{goodfellow2014generative} to build the skeleton embedding. This is achieved by adding a Pose Discriminator which discriminates againts invalid poses and a Confidence Discriminator which helps the model predict joint positions with higher confidence. 
 
-\parencite{bogo2016keep}
-Bogo et al. [16] used the 2D joint heatmaps from a CNN-based 2D pose detec-
-tor to predict both 3D pose and the 3D shape of human body. Their body model
-is defined as a function parameterized by coefficients of shape prior, pose parame-
-ters defined by kinematic tree model (See Section 2.1) and translation parameters.
-They minimize five different error terms: joint-based error defined by re-projection
-error under weak perspective projection, three pose priors and a shape prior. 
+SMPL \parencite{loper2015smpl} is a statistical human body model which is parametrisized both in terms of the kinematic relation between joints and the shape of the person. Bogo et. al. \parencite{bogo2016keep} use the DeepCut \parencite{pishchulin2016deepcut} model to estimate the 2D joints positions and fit the SMPL body model using an optimization mechanism which minimizes reprojection loss for the joints, shape priors, joint angle priors and pose priors. Huang et. al. extend this work \parencite{huang2017towards} by fitting the 3D pose to 2D joints detected from multi-view images, fit the 3D body model to the contours produced by a Convolutional Neural Network and utilize a Discrete Cosine Transform (DCT) \parencite{akhter2012bilinear} temporal prior. This results in a drastic imporivement over their baseline. Kanazawa et. al. \parencite{kanazawa2017end} used the SMPL model in a Deep Learning architecture. They use a Convolutional Neural Network to estimate camera parameters, 3D pose parameters, and shape parameters. The shape parameters and 3D pose parameters are used in the SMPL model to generate a human pose. Adveseraial training is being performed where the the discriminator helps the model learn a manifold of valid shapes. The pose is projected back to the 2D frame using the camera parameters and reprojection loss is applied to the joints. This approach enables to train the lifting to 3D pose without a 3D annotated dataset and instead use visually much more diverse and large 2D pose datasets. 3D pose datasets are used to learn skeletal structure using adveserial training.   
 
-\parencite{mehta2017vnect}
-Mehta et al.
-[74] implemented a real time system for 3D pose estimation which exploits tem-
-poral information from the previous frame to achieve temporal smoothness. Given
-an image the bounding box at time t is estimated by tracking the bounding box
-and 2D joint locations of the previous frame which is passed to a CNN to estimate
-2D heatmaps and 3D location map x,y,z for each joint. They combine the 2D and
-2D pose predictions of the current frame with that of the previous frame and apply
-temporal filtering and smoothing to obtain the 3D pose of the current frame.
-In our third model we exploit the temporal information present in a sequence
-of frames and would like to examine if applying temporal constraints can improve
-the performance of our previous network. For monocular videos, it is intuitive to
-exploit the temporal information of previous frames as it can provide many impor-
-tant cues like some part being occluded in one frame may be visible in the next
-frame or in our case, the 2D pose estimation of a particular frame may be more er-
-roneous than other frame. We expect that the temporal information will distribute
-the error in pose estimation smoothly over the sequence reducing jitter and overall
-improvement in results.
+Mehta et. al. \parencite{mehta2017vnect} use a combination of Bounding box tracking, 2D confidence map and 3D joint position estimation, temporal regularization and skeletal fitting to train a deep convolutional neural network. Their architecture is general where they can estimate poses in multi-person scenes with temporal smoothing however they only rely on Human3.6M and MPII-3D-INF datasets to train which result in poorer accuracy than their counterparts using similar techniques. They extennd their previous work \parencite{mehta2017single} by encorporating Part Affinity Fields \parencite{cao2016realtime} and Oclution Robust Location Maps (ORLM). They also employ a training procedure where they train on 2D dataset by freezing the 3D pose estimation branch of their nework and train on a seperate 3D pose dataset to learn 3D mapping.
 
+Debral et. al. \parencite{dabral2017structure} use the stacked hourglass \parencite{newell2016stacked} model for 2D pose estimations. They first train the 2D pose model seperately. Later they stack a 3D pose estimator on top of the stacked hourglass. Then they add structural consistency losses like symmetry loss and illegal angle loss. Lastly, they train a seperate RNN model which smooths out the 3D pose estimations.
