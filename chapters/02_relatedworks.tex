@@ -77,46 +77,45 @@ Moreno et. al. \parencite{moreno20173d} uses the output of a off-the-shelf 2D po
 
 \subsection{Temporal Information}
 
-\parencite{hossain2017exploiting}
-\parencite{hossain2017understanding}
+3D pose estimation when done without considering the temporal context can be noisy. The source of the noise can be occlusions inherent randomness in the model which cause its estimations to become jittery and occasional missing joints. A solution to this problem is to use the video as the input and estimate 3D pose sequences. The temporal consistency constraint results in an estimation that is smooth and doesn't contain missing joints since they will be interpolated by the network. Another benefit of using temporal information is the fact that certain ambiguities can be remove by utilizing the fact that the size of the skeleton of the person doesn't during the sequence. This helps the network interpret change in apparent size as the person becoming closer to the camera.
 
-Lin et. al. \parencite{lin2017recurrent} utilizes an iterative refinement mechanism using Long-Short Term Memory Networks (LSTM) \parencite{hochreiter1997long}. This enables them to both utilize temporal information and use the critical refinement strategy which many of the state-of-the-art methods rely on heavily. They designed a 2D pose module which estimates image dependant pose representations the feature maps are passed to both a feature adaptation module which lift the feature maps to 3d and to the next stage through convolutional filters. 
+Lin et. al. \parencite{lin2017recurrent} utilizes an iterative refinement mechanism using Long-Short Term Memory Networks (LSTM) \parencite{hochreiter1997long}. This enables them to both utilize temporal information and use the critical refinement strategy which many of the state-of-the-art methods rely on heavily. They designed their architecture in stages to enable refinement where the 2D pose estimation module and 3D pose module give their outputs to the next stage receive outputs from the previous one. Inside each stage the 2D pose module which estimates image dependant pose representations given the preivous stages outout and the image . The feature maps are then passed to bot the next stage through convolutional filters and the feature adaptation module which lifts the feature maps to 3d and passed them to 3D pose module. 3D pose module estimate the 3D pose given the previous pose estimate and the feature adaptation modules output and passes the pose estimate to the next stage.
 
-Lin et al. [65] predicts 3D pose from an image directly and refines them in multiple
-stages using LSTM [48]. Each stage has a 2D pose module which learns a two di-
-mensional pose-aware feature map that encodes information of human body pose.
-This feature map is passed onto feature adaptation module which gives a high di-
-mensional common embedding space for 2D and 3D pose. The adapted feature is
-concatenated with the hidden states of the LSTM and 3D pose detection from the
-previous stage and is passed as input to the LSTM of current stage to predict the
-3D pose in the current refinement stage.
+Hossain et. al. \parencite{hossain2017exploiting}, \parencite{hossain2017understanding} extendend \parencite{martinez2017simple}'s work by exploiting temporal information through a sequence-to-sequence architecture similar to \parencite{sutskever2014sequence}. Thier model is much simpler than their counterparts \parencite{lin2017recurrent
+}, \parencite{bogo2016keep}, \parencite{mehta2017vnect} which utilize temporal information thanks to the fact that they use 2D poses from a off-the-shelf 2D pose detector. This boils the problem down to lifting the pose to 3D.
 
-Estimating 3D pose per frame may cause jitter because the error in pose estimation
-for each frame is independent of one another. A natural extension would be to
-estimate the 3D pose over a sequence of images or monocular video such that the
-poses look temporally coherent and smooth i.e. the error is distributed smoothly
-over a sequence. A number of methods tried to exploit the temporal information
-available over a sequence of images to achieve temporal smoothness.
-Andriluka et al. [4] exploited temporal information using tracking-by-detection.
-They first estimated 2D poses for each frame individually. Then they associated the
-poses across frames using tracking-by-detection method. The robust estimates of
-2D pose over a short sequence was used to recover 3D pose. Tekin et al. [117] ex-
-ploited the motion information by first using a CNN to align successive bounding
-boxes such that the person always remains in the center of the bounding box. Then
-they concatenated the aligned images and extracted 3D HOG (histogram of gra-
-dients) features densely over the spatio-temporal volume from which they regress
-the 3D pose of the central frame. They tried different techniques for regressing 3D
-pose and found deep network to work the best. Du et al. [29] used a height-map,
-estimated from RGB image and camera calibration, and RGB image to regress 2D
-joint locations using dual stream CNN. From a sequence of 2D joints, they esti-
-mated 3D pose by minimizing reprojection error and by imposing pose-conditioned
-joint velocity and temporal coherence constraints during optimization. Mehta et al.
+\subsection{Structrual Priors}
+
+3D pose estimation is an ill-posed problem since it the 2D projection of a 3D pose is not unique. The given information  
+
+\parencite{zhou2016deep}
+
+\parencite{chen2017adversarial}
+\parencite{wan2017deepskeleton}
+\parencite{fang2018learning}
+\parencite{sun2017compositional}
+
+\parencite{mehta2017single}
+\parencite{kanazawa2017end}
+\parencite{dabral2017structure}
+\parencite{huang2017towards}
+
+\parencite{bogo2016keep}
+Bogo et al. [16] used the 2D joint heatmaps from a CNN-based 2D pose detec-
+tor to predict both 3D pose and the 3D shape of human body. Their body model
+is defined as a function parameterized by coefficients of shape prior, pose parame-
+ters defined by kinematic tree model (See Section 2.1) and translation parameters.
+They minimize five different error terms: joint-based error defined by re-projection
+error under weak perspective projection, three pose priors and a shape prior. 
+
+\parencite{mehta2017vnect}
+Mehta et al.
 [74] implemented a real time system for 3D pose estimation which exploits tem-
 poral information from the previous frame to achieve temporal smoothness. Given
 an image the bounding box at time t is estimated by tracking the bounding box
 and 2D joint locations of the previous frame which is passed to a CNN to estimate
 2D heatmaps and 3D location map x,y,z for each joint. They combine the 2D and
-263D pose predictions of the current frame with that of the previous frame and apply
+2D pose predictions of the current frame with that of the previous frame and apply
 temporal filtering and smoothing to obtain the 3D pose of the current frame.
 In our third model we exploit the temporal information present in a sequence
 of frames and would like to examine if applying temporal constraints can improve
@@ -128,12 +127,3 @@ roneous than other frame. We expect that the temporal information will distribut
 the error in pose estimation smoothly over the sequence reducing jitter and overall
 improvement in results.
 
-\subsection{Structrual Priors}
-
-\parencite{bogo2016keep}
-Bogo et al. [16] used the 2D joint heatmaps from a CNN-based 2D pose detec-
-tor to predict both 3D pose and the 3D shape of human body. Their body model
-is defined as a function parameterized by coefficients of shape prior, pose parame-
-ters defined by kinematic tree model (See Section 2.1) and translation parameters.
-They minimize five different error terms: joint-based error defined by re-projection
-error under weak perspective projection, three pose priors and a shape prior. 
