@@ -3,24 +3,77 @@
 
 \chapter{3D Pose Estimation}\label{chapter:3Dpose}
 
+This chapter examines the 3D pose estimation problem. In this chapter we train three models and examine what each design choice and present the qualitative and quantitative results. All models take the x-y pixel location as input and produce 3D joint locations in the mm space. While the second and third model take the input in sequences the first model takes in frame by frame. The main problems we aim to solve in 3D pose estimation are:
+\begin{itemize}
+    \item Being invariant to the viewpoint of the camera
+    \item Dealing with missing joints in the sequence
+    \item Having a noisy 2D pose estimates as input
+    \item Being invariant to changes in apparent size of the person when he or she gets close or farther away from the camera
+\end{itemize}
+
+All models are written in Tensorflow \parencite{abadi2016tensorflow} which is an efficient and popular Deep Learning Library.
+
 \section{Data Preprocessing}
 
-\subsection{Camera coordinate frame}
-\subsection{2D detections}
+For training the 3D pose models we used the Human3.6M dataset \parencite{ionescu2014human3} and the MPI-INF-3DHP dataset \parencite{mehta2017monocular}. However, the pose estimates that we get from Open-pose \parencite{cao2016realtime} have different set of joints than the two 3D datasets. Therefore we took the common joints between the three datasets to represent 2D and 3D pose. To illustrate which joints where taken please look to Figure 4.1. The preprocessing step also calculates the height and leg length of the person which is useful in the third model. The data files are saved in Tensorflow's \parencite{abadi2016tensorflow} serialized data format called TFRecords file format which reduces preprocessing time.
+
+\subsection{Coordinate frames}
+
+There are two coordinate frames that we consider one is the Camera Coordinate Frame and the other is Hip Coordinate Frame. In the Hip Coordinate Frame the 3D joint positions are placed in a coordinate system where the origin is the Hip joint. The location of all other joints are represented with respect to the hip joint. This representation style encourage the model to learn anthropometric proportions of the human body and estimate more structurally sound estimations. One difficulty with this coordinate frame is that no matter which direction the camera points at the position and orientation of the Hip Coordinate Frame stays constant. This means that the model needs to estimate the orientation of the hip joint very accurately since all other joints depend on the hip joint. Any error made in the estimation of the hip joint orientation would spill into the estimates of all other joints. Please look at Figure 4.2 for an example.
+
+In the Camera Coordinate Frame the origin is located at the camera position and the z direction points away from the camera. This is a nutural coordinate frame to estimate 3D pose since the 2D pose is given from the same coordinate frame. The model needs to accurately estimate the scale that the camera uses which depend on the camera intrinsics and the depth of each joint. Estimating with respect to any other global frame introduces additional problems namely one would need to estimate the position and orientation of both the global coordinate frame and the joints with respect to the camera and apply the necessary transformation to calculate the pose with respect to the global coordinate frame. This complicates the pose estimation procedure unnecessarily.
+
+\subsection{Normalization and the position of the root}
+
+Normalization of the joint positions has tremendous advantages during training. If the data distribution is close to the data distribution during inference this is a clear advantage. However, one needs to be careful when the data distribution during inference is significantly different from the training distribution the accuracy of the estimation will be significantly worsened. We prepared both normalized and raw versions of the dataset to observe the effect of normalization.
+
+One additional normalization strategy is shifting the coordinate frame position to the hip joint which we call rooting. This can be done when estimating the 3D pose in the Camera Coordinate Frame. This has the added benefit that the position of the hip joint doesn't need to be estimated due to the rooting operation and the orientation of the coordinate frame stays the same in contrast to Hip Coordinate Frame where the orientation of the hip joint is a critical estimation step. This step allows the rooted Camera Coordinate Frame to estimate the joint position with respect to an origin which locates in the hip and has the same orientation with the camera. Thus, eliminating the need to estimate two critical parameters.
+
+\section{Feed-Forward Model}
+
+One first model is using feed forward network with residual connections in a frame by frame basis. Our choice of network is multi layered feed forward network with residual connections \parencite{he2016deep}, dropout \parencite{srivastava2014dropout}, batch norm layer \parencite{ioffe2015batch} and max norm layer. The effect of using Rectified Linear Units (ReLU) \parencite{nair2010rectified} and Self-normalizing Linear Units (SeLU) \parencite{klambauer2017self} as the activation function for the network are compared. The 2D poses given as input may come from the ground truth or may be an output of any off the shelf 2D pose detector. The effect of normalization, taking translation the coordinate frame to the hip joint and rotating the coordinate frame to align with the camera direction is examined. 
+
+\subsection{Network design}
+\subsubsection{Mapping 2D pose to 3D}
+\subsubsection{ReLU vs SeLU activation}
+\subsubsection{Residual connections}
+\subsubsection{Batch normalization, dropout and max-norm}
+\subsection{Loss Function}
 \subsection{Training details}
+\subsection{Evaluation}
+\subsubsection{Quantitative results}
+\subsubsection{Qualitative results}
+\subsubsection{Discussion}
 
-\section{Network design}
 
-\subsection{Mapping 2D pose to 3D}
-\subsection{Fully connected layers with ReLU activation}
-\subsection{Residual or shortcut connections}
-\subsection{Regularization with batch normalization, dropout and
-max-norm constraint}
+\section{Temporal Model}
 
-\section{Loss Function}
+The second model is exploiting temporal information by using a synchronized sequence to sequence network. Long-Short-Term-Memory (LSTM) \parencite{hochreiter1997long} cells with recurrent dropout \parencite{semeniuta2016recurrent} is used as the building block. We use the synchronized sequence to sequence model since we know that each 2D pose in the sequence is corresponding to 3D pose element and the sizes of the two sequences are the same. This makes the connection pastern for the network much simpler. The LSTM blocks can fill in missing joints by tracking the movement of joints and interpolating between them. They also act as a regularizer combining information from different time steps.
 
-\section{Experimental evaluation}
+\subsection{Network design}
+\subsubsection{Mapping 2D pose to 3D}
+\subsubsection{ReLU vs SeLU activation}
+\subsubsection{Residual connections}
+\subsubsection{Batch normalization, dropout and max-norm}
+\subsection{Loss Function}
+\subsection{Training details}
+\subsection{Evaluation}
+\subsubsection{Quantitative results}
+\subsubsection{Qualitative results}
+\subsubsection{Discussion}
 
-\subsection{Quantitative results}
-\subsection{Qualitative results}
-\subsection{Discussion of results}
+\section{Structural Priors}
+
+The third model is using additional height information together with a loss function which preserves the lengths of the bones. Additional information about the height helps solve the ambiguity relating to distance and size of the body. Additionally it help the network to work for people with different body sizes and body compositions. Bone length loss helps the network estimate the length of bones and makes sure it stays constant during the sequence. 3D pose estimation is an ill-defined problem on its own however these additional priors and data help the network disambiguate challenging poses.
+
+\subsection{Network design}
+\subsubsection{Mapping 2D pose to 3D}
+\subsubsection{ReLU vs SeLU activation}
+\subsubsection{Residual connections}
+\subsubsection{Batch normalization, dropout and max-norm}
+\subsection{Loss Function}
+\subsection{Training details}
+\subsection{Evaluation}
+\subsubsection{Quantitative results}
+\subsubsection{Qualitative results}
+\subsubsection{Discussion}
