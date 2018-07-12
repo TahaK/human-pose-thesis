@@ -31,30 +31,75 @@ One additional normalization strategy is shifting the coordinate frame position 
 
 \section{Feed-Forward Model}
 
-One first model is using feed forward network with residual connections in a frame by frame basis. Our choice of network is multi layered feed forward network with residual connections \parencite{he2016deep}, dropout \parencite{srivastava2014dropout}, batch norm layer \parencite{ioffe2015batch} and max norm layer. The effect of using Rectified Linear Units (ReLU) \parencite{nair2010rectified} and Self-normalizing Linear Units (SeLU) \parencite{klambauer2017self} as the activation function for the network are compared. The 2D poses given as input may come from the ground truth or may be an output of any off the shelf 2D pose detector. The effect of normalization, taking translation the coordinate frame to the hip joint and rotating the coordinate frame to align with the camera direction is examined. 
+Our aim with this model is to show that viewpoint augmentation can lead the model to increase its prediction accuracy in novel viewpoints. For that we designed a multilayered Feed-Forward Neural Network with residual connections \parencite{he2016deep} which is inspired by Martinez et. al. \parencite{martinez2017simple}.
 
 \subsection{Network design}
-\subsubsection{Mapping 2D pose to 3D}
-\subsubsection{ReLU vs SeLU activation}
-\subsubsection{Residual connections}
-\subsubsection{Batch normalization, dropout and max-norm}
+
+One model is using feed forward network with residual connections in a frame by frame basis. In this model the basic unit is what we call forward unit and it consists of a fully connected layer, followed by a batch norm layer, followed by dropout layers. Another repeating unit is the residual block which consists of 2 forward units and a residual connection from the input of the block to the output of the block. The input frame is passed through a forward unit and then passed through to two residual blocks and a fully connected layer which has 42 units which correspond to 3D position of the 14 joints. For the choice of activation function the effect of using Rectified Linear Units (ReLU) \parencite{nair2010rectified} and Self-normalizing Linear Units (SeLU) \parencite{klambauer2017self} are compared. For the network visualization please see Figure 1.4
+
+\subsubsection{Residual connections and Refinement}
+
+Residual connections have the effect of propagating the loss signal without intrusion to earlier layers in the network. This enabled He et. al. \parencite{he2016deep} to train Deep Convolutional Neural Networks which are  152 layers deep giving \%4.49 top-5 error rate. Another way to understand the effect of residual connection is that they smooth out the loss surface and make the optimization much easier as was demonstrated by Li et. al. \parencite{li2017visualizing}.
+
+Newell et. al. \parencite{newell2016stacked} demonstrated that iterative refinement of the 2D joint confidence maps has greately imporoved the 2D pose estimation. A similar mechanism is in play in our model with the use of residual connections. All feed forward models share an embedding which the refine over the network. The loss from the final layer propogates to all residual block which can be thought as having many loss functions in between layers. We validate that having residual connections greately imporoves prediction accuracy.   
+
+\subsubsection{Batch normalization and dropout}
+
+The effect of Batch normalization \parencite{ioffe2015batch} is not completely understood \parencite{kohler2018towards}. It is widely beliewed that Batch normalization helps the optimization by reducing internal covaraiate shift \parencite{ioffe2015batch}. This means that the distribution of the activations in a neural network change during the optimization process due to the chnage in the wights which is called covaraiate shift in this scenario. This produces a problem due to the fact that each layer depends on the activations of the previous layer and if the distribution of the activation patterns change than this introduces another signal that the network needs to adapt to. However, evidense that this explanation is incorrect has ben recently shown \parencite{santurkar2018does}. Another explanation for the effectiveness of Batchnorm is that by decoupling the loss minimization problem into optimizing direction and length of the parameters separately. During training this reduces cross-dependencies between layers and thus simplifies curvature structure and Gradient Descent dynamics \parencite{kohler2018towards}. We observed the effectiveness of using batch-norm in our model.
+
+Dropout \parencite{srivastava2014dropout} has been long known to help to regularize Neural Networks. It works by setting activations in a layer zero with certain probability. This effectively turns the netowork into an ensenble \parencite{hara2016analysis}. When an input propogates through the network only some neurons and every time the neuurons see the input different part of the inout and the partial input is seen by different neurons every time due to the random nature of dropout. This introduces an ensemble mechanism which increases the generalization potential by preventing the neurons from memoryzing the input output mapping and thus overfitting. 
+
+\subsubsection{ReLU vs SELU activation}
+
+Rectified Linear Units (ReLU) \parencite{nair2010rectified} have been widely used in Deep Learning due to its effectiveness in preventing the vanishing gradient problem. Earlier activation methods like sigmoids and the hyperbolic tangent function have a small region around zero where the gradient is large. Outside of this active region the gradient of these functions becomes close to zero. This makes training deep networks increasingly difficult since most gradient values cannot propogate to the early layers. However ReLUs don't suffer from this problem and make training very deep networks possible. However they suffer from a different set of problems. ReLUs don't produce an activation for input values which are smaller than zero, this is known as the dead ReLU problem. Moreover, they shift mean of the activations to the possitive side which makes the optimization difficult. 
+
+Klambauer et. al. \parencite{klambauer2017self} showed that Scaled Exponential Linear Units (SELU) have a self-normalization charecteristic where they preserve the zero mean and unit variance property of the activations. This makes them ideal for training highly robust, deep neural networks. We wanted to test this idea and compare SELU and ReLU activations in our model.
+
+\subsubsection{Viewpoint augmentation}
+
+One of the central points of this model is to test viewpoint invariance. This is achieved through augmentation where the ground truth 3D pose is projected onto multiple virtual cameras placed around the actor in a grid pattern. The pose evaluation is done from a different set of virtual camera positions to validate the viewpoint invariance. % The projection is done using a simple camera model.  Need to add more details
+
 \subsection{Loss Function}
+
+Our model estimates the 3D pose $\theta \in R^{3\times N}$ given the 2D pose $X \in R^{2\times N}$. We can represent the neural network as a function $f(x) = y ; x \in R^{2\times N}, y \in R^{3\times N} $. As the loss function we use the L-2 norm between the predicted joint positions and the ground truth joint positions.
+
+\begin{equation}	
+    L(f(x),\theta) = \frac{1}{3N} \cdot \sum_{i=1}^{3N} {\Vert f(x_i)-\theta_i \Vert}_2^2
+\end{equation}
+
+% Maybe more details
+
 \subsection{Training details}
+
+We trained our model for 100 epochs with batch size is 16384. Large batch training has shown a lot of promise recently \parencite{you2017imagenet}, \parencite{goyal2017accurate}. In our case training with such a high batch size enabled us to train much faster since we could utilize the GPU hardware much more effectively. Adding augmentations meant that we would have much more data to process. For example when using 40 virtual cameras the dataset size for Human3.6M dataset would effectively increase 10 times. This enabled us to train with a faster rate and explore a wider range of architectures and hyper-parametrs. We observed that having large batch sizes didn't affect the performance negatively if other hyper-paramters are adjusted as well. For the optimizer we used the ADAM optimizer with learning rate is 0.001. For the wight initialization we used He initialization when training with ReLU activation and SELU activation is initialized with normal distribution with mean zero and vairance $\sqrt(2 / n)$ where n denotes number of hidden units in the previous layer. 
+
 \subsection{Evaluation}
+
+The 2D poses given as input may come from the ground truth or may be an output of any off the shelf 2D pose detector. The effect of normalization, rooting, Camera and Hip centered coordinate frames are compared. 
+
 \subsubsection{Quantitative results}
+
+Table 4.1 shows the comparison between a baseline model trained in the original 4 camera views and our model which was trained on 40 virtual camera poistions. Evalutaion is done in novel camera positions.
+
 \subsubsection{Qualitative results}
+
+In Figure 4.1 the comparative figures can be seen. 
+
 \subsubsection{Discussion}
+
+It can be seen that training a model with viewpoint augmentation helps become invariant to viewpoint changes.
 
 
 \section{Temporal Model}
 
-The second model is exploiting temporal information by using a synchronized sequence to sequence network. Long-Short-Term-Memory (LSTM) \parencite{hochreiter1997long} cells with recurrent dropout \parencite{semeniuta2016recurrent} is used as the building block. We use the synchronized sequence to sequence model since we know that each 2D pose in the sequence is corresponding to 3D pose element and the sizes of the two sequences are the same. This makes the connection pastern for the network much simpler. The LSTM blocks can fill in missing joints by tracking the movement of joints and interpolating between them. They also act as a regularizer combining information from different time steps.
+Our aim in this model is to show that a synchronized sequence to sequence model can estimate 
 
 \subsection{Network design}
-\subsubsection{Mapping 2D pose to 3D}
-\subsubsection{ReLU vs SeLU activation}
-\subsubsection{Residual connections}
-\subsubsection{Batch normalization, dropout and max-norm}
+
+The second model is exploiting temporal information by using a synchronized sequence to sequence network. Long-Short-Term-Memory (LSTM) \parencite{hochreiter1997long} cells with recurrent dropout \parencite{semeniuta2016recurrent} is used as the building block. We use the synchronized sequence to sequence model since we know that each 2D pose in the sequence is corresponding to 3D pose element and the sizes of the two sequences are the same. This makes the connection pastern for the network much simpler. The LSTM blocks can fill in missing joints by tracking the movement of joints and interpolating between them. They also act as a regularizer combining information from different time steps.
+
+
+\subsubsection{Synchronized sequence to sequence}
 \subsection{Loss Function}
 \subsection{Training details}
 \subsection{Evaluation}
@@ -64,13 +109,13 @@ The second model is exploiting temporal information by using a synchronized sequ
 
 \section{Structural Priors}
 
-The third model is using additional height information together with a loss function which preserves the lengths of the bones. Additional information about the height helps solve the ambiguity relating to distance and size of the body. Additionally it help the network to work for people with different body sizes and body compositions. Bone length loss helps the network estimate the length of bones and makes sure it stays constant during the sequence. 3D pose estimation is an ill-defined problem on its own however these additional priors and data help the network disambiguate challenging poses.
 
 \subsection{Network design}
-\subsubsection{Mapping 2D pose to 3D}
-\subsubsection{ReLU vs SeLU activation}
-\subsubsection{Residual connections}
-\subsubsection{Batch normalization, dropout and max-norm}
+
+The third model is using additional height information together with a loss function which preserves the lengths of the bones. Additional information about the height helps solve the ambiguity relating to distance and size of the body. Additionally it help the network to work for people with different body sizes and body compositions. Bone length loss helps the network estimate the length of bones and makes sure it stays constant during the sequence. 3D pose estimation is an ill-defined problem on its own however these additional priors and data help the network disambiguate challenging poses.
+
+\subsubsection{Height and anthropometry}
+\subsubsection{Bone length}
 \subsection{Loss Function}
 \subsection{Training details}
 \subsection{Evaluation}
