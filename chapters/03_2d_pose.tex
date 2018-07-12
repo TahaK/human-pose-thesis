@@ -3,10 +3,38 @@
 
 \chapter{2D Pose Estimation}\label{chapter:2dpose}
 
-\section{Methods}
+2D pose estimation is the first step for this Thesis. Here we explain the rationale behind the 2D and 3D pose separation and the method we used for 2D pose estimation. Lastly, we show the 2D pose results in the gait dataset. 
 
-\subsection{Mapping 2D pose to 3D}
-\subsection{Fully connected layers with ReLU activation}
-\subsection{Residual or shortcut connections}
-\subsection{Regularization with batch normalization, dropout and
-max-norm constraint}
+\section{Decoupling between 2D and 3D pose}
+
+Consider the probabilistic formulation over the variables: the image I, the 3D pose $ \theta \in R^{N\times3} $, and the 2D pose $X \in R^{N\times2}$ where N denotes the number of joints. Since the 3D pose contain the necessary information for the 2D pose we can argue that 2D pose is a dependant variable of 3D pose.
+
+\begin{equation}
+    p(\theta,I) = p(\theta,X,I)
+\end{equation}
+
+We can expand Equation 3.1 using the Bayes' Rule as a sum of condtional probabilities. 
+
+\begin{equation}
+    p(\theta|I) \cdot p(I) = p(\theta|X,I) \cdot p(X|I) \cdot p(I)
+\end{equation}
+
+In this thesis we assume that the 3D pose of a human is conditionally independent from the image given the 2D pose ($p(\theta|X,I) = p(\theta|X)$ ). This means that the 3D pose estimation can be done solely on basis of 2D joint positions. Although this assumption is not completely accurate it is a good approximation. Monocular cues like depth cues that can be obtained from the image are disregarded with this assumption. With this formulation the task becomes 
+
+\begin{equation}
+    p(\theta|I) = p(\theta|X) \cdot p(X|I)
+\end{equation} 
+
+where the task of 3D pose estimation given an image $p(\theta|I)$ can be thought as a combination of the 2D pose given the image $p(X|I)$ which can be modeled using a Convolutional Neural Network and the 3D pose given the 2D pose $p(\theta|X)$ which can be modeled using a Feed-Forward Neural Network. The 2D joint positions act as constraints for the 3D pose which on their own may not be enough to specify a unique pose. However there are other constraints on the human body which limit the ambiguity in the pose and make this assumption practical.
+
+This approach has several benefits
+\begin{itemize}
+    \item It simplifies the pose estimation procedure without sacrificing a lot of the accuracy as it was demonstrated by \parencite{martinez2017simple}, \parencite{sun2017compositional}, \parencite{hossain2017exploiting}
+    \item The existing 3D pose datasets do not  have the size and visual variability to train a Deep Neural Network that can perform well in in-the-wild scenarios.
+\end{itemize}
+
+\section{Open Pose}
+
+We decided to use the Open Pose 2D pose detector by Cao et. al. \parencite{cao2016realtime} in the gait dataset. 
+
+\section{Results on the Gait dataset}
