@@ -159,11 +159,11 @@ The third model is using additional height information together with a loss func
 
 \subsubsection{Bone length loss}
 
-Our main observation in this model is that the length of human bones don't chage during a short amount of time. A moving person's apparent size may chanage when moving towards or away from an observer but this doesn't mean that the size of the person's skeleton is changing. This simple observation lead us to add the notion of bones to our model. We stricly enforce the size of them not to change during the esimtation sequence.
+Our main observation in this model is that the length of human bones don't change during a short amount of time. A moving person's apparent size may change when moving towards or away from an observer but this doesn't mean that the size of the person's skeleton is changing. This simple observation lead us to add the notion of bones to our model. We strictly enforce the size of them not to change during the estimation sequence.
 
 \subsubsection{Height and anthropometry}
 
-Another important observation is that just by using the height and leg length of a person bone lenghts of a person can be estimated with reasonably high accuracy. This stems from the fact that anthropometric proportions of the human body are relatively stable across people. This assumption is of course not correct but still practical in our case since we require to estimate the 3D pose of a moving person with drastically different visual appearances due to the movement. This forces us to estimate the distance and person size and this assumption helps us achieve this goal.
+Another important observation is that just by using the height and leg length of a person bone lengths of a person can be estimated with reasonably high accuracy. This stems from the fact that anthropometric proportions of the human body are relatively stable across people. This assumption is of course not correct but still practical in our case since we require to estimate the 3D pose of a moving person with drastically different visual appearances due to the movement. This forces us to estimate the distance and person size and this assumption helps us achieve this goal.
 
 \subsubsection{Loss Function}
 
@@ -171,9 +171,9 @@ The loss function that we use is similar to the synchronized sequence to sequenc
 
 \subsection{Training details}
 
-The training procedure is similar to the procedure of the synchronized sequence to sequence model. Note that here $\x_{i,t}$ denotes the x,y,z position of the joint.
+The training procedure is similar to the procedure of the synchronized sequence to sequence model. Note that here $ x_{i,t} $ denotes the x,y,z position of the joint.
 
-Bone lenth loss is defined by
+Bone length loss is defined by
 \begin{equation}	
     L_{bone}(B,B) = \frac{1}{NT} \cdot \sum_{t=1}^{T} \sum_{n=1}^{N} {\Vert B_{i,t})-B_{i}) \Vert}_2^2
 \end{equation}
@@ -181,13 +181,14 @@ Bone lenth loss is defined by
 Temporal bone length loss is defined by
 
 \begin{equation}	
-    L_{bone_temp}(B,B) = \frac{1}{NT} \cdot \sum_{t=1}^{T} \sum_{n=1}^{N} {\Vert B_{i,t})-B_{i,t-1}) \Vert}_2^2
+    L_{bone-temp}(B,B) = \frac{1}{NT} \cdot \sum_{t=1}^{T} \sum_{n=1}^{N} {\Vert B_{i,t})-B_{i,t-1}) \Vert}_2^2
 \end{equation}
 
 For the overall loss is defined by
 
 \begin{equation}	
-    L(f(x),\theta) = (1-\alpha-\beta-\gamma) \cdot L_2(f(x),\theta) + \alpha \cdot L_{temp}(f(x),\theta) + \beta \cdot L_{bone}(f(x),\theta) + \gamma \cdot L_{bone_temp}(f(x),\theta)
+    L(f(x),\theta) = (1-\alpha-\beta-\gamma) \cdot L_2(f(x),\theta) + \alpha \cdot L_{temp}(f(x),\theta) + 
+    \beta \cdot L_{bone}(f(x),\theta) + \gamma \cdot L_{bone-temp}(f(x),\theta)
 \end{equation}
 
 where $\alpha,\beta,\gamma$ are hyper-parameters
@@ -196,7 +197,7 @@ where $\alpha,\beta,\gamma$ are hyper-parameters
 
 In order to evaluate the effect of our structural priors we compared the anthropometric proportions and body size estimates during the evaluation step between the synchronized sequence to sequence model and our model.
 
-We finally test our full model with temporal regularization, structural priors and viewpoint invariance and compare it againts our other models.
+We finally test our full model with temporal regularization, structural priors and viewpoint invariance and compare it against our other models.
 
 \subsubsection{Results}
 
@@ -206,7 +207,7 @@ Here are examples of pose estimates shown in Figure 4.9
 
 Comparison between the final model and previous models are at Table 4.4.
 
-Comperative visualizations can be seen in Figure 4.10
+Comparative visualizations can be seen in Figure 4.10
 
 \subsubsection{Discussion}
 
