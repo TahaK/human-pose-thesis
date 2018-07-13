@@ -21,7 +21,7 @@ There has been many deep learning based successful 2D pose estimation techniques
 
 Our approach is to decouple the problem of 3D pose estimation from a monocular image to 2D pose estimation from monocular image and lifting the pose from 2D to 3D. This approach has several advantages. 
 \begin{itemize}
-    \item Firstly, 2D pose estimation methods like \parencite{cao2016realtime} perform very well on in-the-wild scenarios where there exists large annotated datasets like MPII \parencite{andriluka14cvpr} and MS-COCO \parencite{lin2014microsoft}. This enables us to perform high quality 2D pose estimations from gait sequence videos.
+    \item Firstly, 2D pose estimation methods like \parencite{cao2016realtime} perform very well on in-the-wild scenarios where there exists large annotated datasets like MPII \parencite{andriluka20142d} and MS-COCO \parencite{lin2014microsoft}. This enables us to perform high quality 2D pose estimations from gait sequence videos.
     \item Secondly, it is possible to train a 2D to 3D pose estimator for arbitrary camera viewpoints and distances. This is accomplished through projecting the 3D annotated joint positions to the required camera positions.
     \item Thirdly, this makes the problem remarkably simpler and allows for a greater range of solutions to be explored.
 \end{itemize}
