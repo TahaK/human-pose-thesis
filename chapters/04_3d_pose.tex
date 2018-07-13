@@ -80,7 +80,22 @@ Other architectural choices are validated through experiments as well. The activ
 
 \subsubsection{Results}
 
-Table 4.1 shows the comparison between a baseline model trained in the original 4 camera views and our model which was trained on 40 virtual camera positions. Evaluation is done in novel camera positions.
+\autoref{tab:feedforward-comp} shows the comparison between a baseline model trained in the original 4 camera views and our model which was trained on 40 virtual camera positions. Evaluation is done in novel camera positions.
+
+\begin{table}[htpb]
+    \centering
+    \begin{tabular}{l l l l}
+        \toprule
+            A & B & C & D \\
+        \midrule
+            1 & 2 & 1 & 2 \\
+            2 & 3 & 2 & 3 \\
+        \bottomrule
+    \end{tabular}
+    \caption[Comparison Feed Forward Network]{Compare the viewpoint invariance between standard and augmented Feed Forward Networks}\label{tab:feedforward-comp}
+\end{table}
+
+
 
 In Figure 4.6 the comparative figures can be seen. 
 
@@ -140,7 +155,21 @@ In order to evaluate the effect our model with respect to missing joint position
 
 \subsubsection{Results}
 
-For the comparison of the results please look at Table 4.2
+For the comparison of the results please look at \autoref{tab:seq-comp}
+
+\begin{table}[htpb]
+    \centering
+    \begin{tabular}{l l l l}
+        \toprule
+            A & B & C & D \\
+        \midrule
+            1 & 2 & 1 & 2 \\
+            2 & 3 & 2 & 3 \\
+        \bottomrule
+    \end{tabular}
+    \caption[Comparison Synchronized Sequence to Sequence Network]{Compare the performance in missing joints between Feed Forward Network and Synchronized Sequence to Sequence Network}\label{tab:seq-comp}
+\end{table}
+
 
 Here are examples of pose estimates shown in Figure 4.8
 
@@ -201,11 +230,39 @@ We finally test our full model with temporal regularization, structural priors a
 
 \subsubsection{Results}
 
-For the comparison of the results please look at Table 4.3
+For the comparison of the results please look at \autoref{tab:structural-comp}
+
+\begin{table}[htpb]
+    \centering
+    \begin{tabular}{l l l l}
+        \toprule
+            A & B & C & D \\
+        \midrule
+            1 & 2 & 1 & 2 \\
+            2 & 3 & 2 & 3 \\
+        \bottomrule
+    \end{tabular}
+    \caption[Comparison Structural Sequence Network]{Compare the distance and scale invariance between standard and regularized Sequence Networks}\label{tab:structural-comp}
+\end{table}
+
 
 Here are examples of pose estimates shown in Figure 4.9
 
-Comparison between the final model and previous models are at Table 4.4.
+Comparison between the final model and previous models are at \autoref{tab:final-comp}
+
+\begin{table}[htpb]
+    \centering
+    \begin{tabular}{l l l l}
+        \toprule
+            A & B & C & D \\
+        \midrule
+            1 & 2 & 1 & 2 \\
+            2 & 3 & 2 & 3 \\
+        \bottomrule
+    \end{tabular}
+    \caption[Comparison Final]{Compare the Final Network with augmented Feed Forward Network and augmented Sequence to Sequence Network}\label{tab:final-comp}
+\end{table}
+
 
 Comparative visualizations can be seen in Figure 4.10
 
