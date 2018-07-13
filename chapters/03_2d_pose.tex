@@ -7,7 +7,13 @@
 
 \section{Decoupling between 2D and 3D pose}
 
-Consider the probabilistic formulation over the variables: the image I, the 3D pose $ \theta \in R^{N\times3} $, the 2D pose $X \in R^{N\times2}$ and camera parameters $ C \in R^{6} $ where N denotes the number of joints and the camera has 3 rotational and 3 translational parameters. Since the 2D pose is produced though the camera model where the 3D pose is projected into a 2D image plane, we can argue that the 3D pose of a human is conditionally independent from the image given the 2D pose ( $p(\theta,C|X,I) = p(\theta,C|X)$ ). This means that the 3D pose estimation can be done solely on basis of 2D joint positions. Although this assumption is not completely accurate it is a good approximation. Monocular cues like depth cues that can be obtained from the image are disregarded with this assumption. We can also argue that the image is produced with a random process which depend on the 2D pose. For the graphical model please see Figure 3.1.
+Consider the probabilistic formulation over the variables: the image I, the 3D pose $ \theta \in R^{N\times3} $, the 2D pose $X \in R^{N\times2}$ and camera parameters $ C \in R^{6} $ where N denotes the number of joints and the camera has 3 rotational and 3 translational parameters. Since the 2D pose is produced though the camera model where the 3D pose is projected into a 2D image plane, we can argue that the 3D pose of a human is conditionally independent from the image given the 2D pose ( $p(\theta,C|X,I) = p(\theta,C|X)$ ). This means that the 3D pose estimation can be done solely on basis of 2D joint positions. Although this assumption is not completely accurate it is a good approximation. Monocular cues like depth cues that can be obtained from the image are disregarded with this assumption. We can also argue that the image is produced with a random process which depend on the 2D pose. For the graphical model please see \autoref{fig:graphical-model}.
+
+\begin{figure}[htpb]
+    \includegraphics[width=\linewidth]{zmatrix.png}
+    \caption{Visualization of the graphical model}
+    \label{fig:graphical-model}
+\end{figure}
 
 Using Bayes' Rule the joint probability can be written conditioned on the image as follows.
 
@@ -69,10 +75,16 @@ The gait dataset contains more than 77000 videos where each video containing aro
     \caption[Joint detection rate]{Joint detection rate of Open pose \parencite{cao2016realtime} on the gait dataset}\label{tab:open-pose-gait-rate}
 \end{table}
 
-For qualitative evaluation of the 2D pose estimates we show accurate estimates together with failure cases in Figure 3.1. The pose prediction has certain obvious limitations some due to the limited view point of the camera and some related with pose prediction algorithm's performance. 
+For qualitative evaluation of the 2D pose estimates we show accurate estimates together with failure cases in \autoref{fig:gait-failure}. The pose prediction has certain obvious limitations some due to the limited view point of the camera and some related with pose prediction algorithm's performance. 
+
+\begin{figure}[htpb]
+    \includegraphics[width=\linewidth]{zmatrix.png}
+    \caption{Visualization of the Z-matrix}
+    \label{fig:gait-failure}
+\end{figure}
 
 \begin{itemize}
-    \item The detection is not possible when the subject is not visible in the beginning or in the end of the sequence. See Figure 3.1.d and 3.1.e
-    \item The detection is generally less successful  when the subject turns his or her back to the camera especially the eyes, ears and head detection. 3.1.f and 3.1.g
-    \item There are missing joints during the sequence sometimes in the middle of the sequence. 3.1.h and 3.1.i
+    \item The detection is not possible when the subject is not visible in the beginning or in the end of the sequence. See \autoref{fig:gait-failure} and \autoref{fig:gait-failure}
+    \item The detection is generally less successful  when the subject turns his or her back to the camera especially the eyes, ears and head detection. \autoref{fig:gait-failure} and\autoref{fig:gait-failure}
+    \item There are missing joints during the sequence sometimes in the middle of the sequence. \autoref{fig:gait-failure} and \autoref{fig:gait-failure}
 \end{itemize}

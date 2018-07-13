@@ -17,7 +17,13 @@ There is a variety of spatio-temporal representation methods for 3D human poses.
 
 \subsection{Kinematic Tree}
 
-Approaches which use the kinematic tree model \parencite{barron2001estimating}, \parencite{wei2009modeling}, \parencite{zhou2016deep}, \parencite{sun2017compositional}, \parencite{mehta2017monocular} represent the pose in terms of a root joint and hierarchical pairwise relations that use the length of the limb and joint angles to point from the parent joint to its child. This model has the advantage that it can impose  skeletal structural limits constraints like anthropometric proportions, joint angle limits, symmetry conditions and rigid body limits \parencite{dabral2017structure}, \parencite{wei2009modeling}. This can constrain the total degrees of freedom in the model and anatomically sound pose estimates. For an example please look at Figure 2.1. SMPL \parencite{loper2015smpl} is statistical human body model which represents pose in a kinematic tree tailored to the subject’s body shape. It combines information about pose and body shape in a single model and it has shown promise in 3D pose estimation \parencite{bogo2016keep}.
+Approaches which use the kinematic tree model \parencite{barron2001estimating}, \parencite{wei2009modeling}, \parencite{zhou2016deep}, \parencite{sun2017compositional}, \parencite{mehta2017monocular} represent the pose in terms of a root joint and hierarchical pairwise relations that use the length of the limb and joint angles to point from the parent joint to its child. This model has the advantage that it can impose  skeletal structural limits constraints like anthropometric proportions, joint angle limits, symmetry conditions and rigid body limits \parencite{dabral2017structure}, \parencite{wei2009modeling}. This can constrain the total degrees of freedom in the model and anatomically sound pose estimates. For an example please look at \autoref{fig:smpl}. SMPL \parencite{loper2015smpl} is statistical human body model which represents pose in a kinematic tree tailored to the subject’s body shape. It combines information about pose and body shape in a single model and it has shown promise in 3D pose estimation \parencite{bogo2016keep}.
+
+\begin{figure}[htpb]
+    \includegraphics[width=\linewidth]{zmatrix.png}
+    \caption{Visualization of the SMPL human body model}
+    \label{fig:smpl}
+\end{figure}
 
 \subsection{Pose Dictionary}
 

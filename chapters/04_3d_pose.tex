@@ -15,11 +15,23 @@ All models are written in Tensorflow \parencite{abadi2016tensorflow} which is an
 
 \section{Data Preprocessing}
 
-For training the 3D pose models we used the Human3.6M dataset \parencite{ionescu2014human3} and the MPI-INF-3DHP dataset \parencite{mehta2017monocular}. However, the pose estimates that we get from Open-pose \parencite{cao2016realtime} have different set of joints than the two 3D datasets. Therefore we took the common joints between the three datasets to represent 2D and 3D pose. To illustrate which joints where taken please look to Figure 4.1. The preprocessing step also calculates the height and leg length of the person which is useful in the third model. The data files are saved in Tensorflow's \parencite{abadi2016tensorflow} serialized data format called TFRecords file format which reduces preprocessing time.
+For training the 3D pose models we used the Human3.6M dataset \parencite{ionescu2014human3} and the MPI-INF-3DHP dataset \parencite{mehta2017monocular}. However, the pose estimates that we get from Open-pose \parencite{cao2016realtime} have different set of joints than the two 3D datasets. Therefore we took the common joints between the three datasets to represent 2D and 3D pose. To illustrate which joints where taken please look to \autoref{fig:joint-map}. The preprocessing step also calculates the height and leg length of the person which is useful in the third model. The data files are saved in Tensorflow's \parencite{abadi2016tensorflow} serialized data format called TFRecords file format which reduces preprocessing time.
+
+\begin{figure}[htpb]
+    \includegraphics[width=\linewidth]{zmatrix.png}
+    \caption{Visualization of common joints between Human3.6M and MPI-INF-3DHP}
+    \label{fig:joint-map}
+\end{figure}
 
 \subsection{Coordinate frames}
 
-There are two coordinate frames that we consider one is the Camera Coordinate Frame and the other is Hip Coordinate Frame. In the Hip Coordinate Frame the 3D joint positions are placed in a coordinate system where the origin is the Hip joint. The location of all other joints are represented with respect to the hip joint. This representation style encourage the model to learn anthropometric proportions of the human body and estimate more structurally sound estimations. One difficulty with this coordinate frame is that no matter which direction the camera points at the position and orientation of the Hip Coordinate Frame stays constant. This means that the model needs to estimate the orientation of the hip joint very accurately since all other joints depend on the hip joint. Any error made in the estimation of the hip joint orientation would spill into the estimates of all other joints. Please look at Figure 4.2 for an example.
+There are two coordinate frames that we consider one is the Camera Coordinate Frame and the other is Hip Coordinate Frame. In the Hip Coordinate Frame the 3D joint positions are placed in a coordinate system where the origin is the Hip joint. The location of all other joints are represented with respect to the hip joint. This representation style encourage the model to learn anthropometric proportions of the human body and estimate more structurally sound estimations. One difficulty with this coordinate frame is that no matter which direction the camera points at the position and orientation of the Hip Coordinate Frame stays constant. This means that the model needs to estimate the orientation of the hip joint very accurately since all other joints depend on the hip joint. Any error made in the estimation of the hip joint orientation would spill into the estimates of all other joints. Please look at \autoref{fig:hip-coordinate} for an example.
+
+\begin{figure}[htpb]
+    \includegraphics[width=\linewidth]{zmatrix.png}
+    \caption{Visualization of the Hip coordinate frame}
+    \label{fig:hip-coordinate}
+\end{figure}
 
 In the Camera Coordinate Frame the origin is located at the camera position and the z direction points away from the camera. This is a natural coordinate frame to estimate 3D pose since the 2D pose is given from the same coordinate frame. The model needs to accurately estimate the scale that the camera uses which depend on the camera intrinsics and the depth of each joint. Estimating with respect to any other global frame introduces additional problems namely one would need to estimate the position and orientation of both the global coordinate frame and the joints with respect to the camera and apply the necessary transformation to calculate the pose with respect to the global coordinate frame. This complicates the pose estimation procedure unnecessarily.
 
@@ -35,7 +47,13 @@ Our aim with this model is to show that viewpoint augmentation can lead the mode
 
 \subsection{Network design}
 
-One model is using feed forward network with residual connections in a frame by frame basis. In this model the basic unit is what we call forward unit and it consists of a fully connected layer, followed by a batch norm layer, followed by dropout layers. Another repeating unit is the residual block which consists of 2 forward units and a residual connection from the input of the block to the output of the block. The input frame is passed through a forward unit and then passed through to two residual blocks and a fully connected layer which has 42 units which correspond to 3D position of the 14 joints. For the choice of activation function the effect of using Rectified Linear Units (ReLU) \parencite{nair2010rectified} and Self-normalizing Linear Units (SeLU) \parencite{klambauer2017self} are compared. For the network visualization please see Figure 1.4
+One model is using feed forward network with residual connections in a frame by frame basis. In this model the basic unit is what we call forward unit and it consists of a fully connected layer, followed by a batch norm layer, followed by dropout layers. Another repeating unit is the residual block which consists of 2 forward units and a residual connection from the input of the block to the output of the block. The input frame is passed through a forward unit and then passed through to two residual blocks and a fully connected layer which has 42 units which correspond to 3D position of the 14 joints. For the choice of activation function the effect of using Rectified Linear Units (ReLU) \parencite{nair2010rectified} and Self-normalizing Linear Units (SeLU) \parencite{klambauer2017self} are compared. For the network visualization please see \autoref{fig:feedforward-network}
+
+\begin{figure}[htpb]
+    \includegraphics[width=\linewidth]{zmatrix.png}
+    \caption{Architecture of the Feed Forward model}
+    \label{fig:feedforward-network}
+\end{figure}
 
 \subsubsection{Residual connections and Refinement}
 
@@ -75,8 +93,14 @@ We trained our model for 100 epochs with batch size is 16384. Large batch traini
 
 \subsection{Evaluation}
 
-We designed an experiment aimed at testing the effectiveness of our augmentation strategy. For the baseline four cameras are used in training and for our model we use 40 views sampled in a grid pattern around the actor. For a visualization please look at Figure 4.5. Both models are tested in novel viewpoints and their accuracy is compared. 
+We designed an experiment aimed at testing the effectiveness of our augmentation strategy. For the baseline four cameras are used in training and for our model we use 40 views sampled in a grid pattern around the actor. For a visualization please look at \autoref{fig:grid-pattern}. Both models are tested in novel viewpoints and their accuracy is compared. 
 Other architectural choices are validated through experiments as well. The activation function is being tested in a second experiment. The effect of normalization, rooting, Camera and Hip centered coordinate frames are also compared. 
+
+\begin{figure}[htpb]
+    \includegraphics[width=\linewidth]{zmatrix.png}
+    \caption{Augmentation through a grid of virtual cameras}
+    \label{fig:grid-pattern}
+\end{figure}
 
 \subsubsection{Results}
 
@@ -97,7 +121,13 @@ Other architectural choices are validated through experiments as well. The activ
 
 
 
-In Figure 4.6 the comparative figures can be seen. 
+In \autoref{fig:feedforward-compare} the comparative figures can be seen. 
+
+\begin{figure}[htpb]
+    \includegraphics[width=\linewidth]{zmatrix.png}
+    \caption{Compariston between of standard and augmented Feed Forward Networks}
+    \label{fig:feedforward-compare}
+\end{figure}
 
 \subsubsection{Discussion}
 
@@ -115,7 +145,13 @@ information from both time directions. They also act as a temporal consistency r
 
 \subsubsection{Synchronized sequence to sequence}
 
-Sequence to sequence models \parencite{sutskever2014sequence} have shown a lot of promising results in Neural Machine Translation \parencite{bahdanau2014neural}, Video Caption Generation \parencite{xu2015show} and Question Answering \parencite{hermann2015teaching}. Their architecture consists of two phases: the encoding phase and the decoding phase. During encoding phase the input sequence is fed to a Recurrent Neural Network and the necessary information is captured inside the hidden state. After a special  symbol is passed which indicates the end of the input sequence the network uses the hidden state to produce and the previous output to produce the current input. Please look at Figure 4.6 for a visualization. This architecture is very effective especially when used together with an attention mechanism since it can deal with unaligned sequences and sequences of different length.
+Sequence to sequence models \parencite{sutskever2014sequence} have shown a lot of promising results in Neural Machine Translation \parencite{bahdanau2014neural}, Video Caption Generation \parencite{xu2015show} and Question Answering \parencite{hermann2015teaching}. Their architecture consists of two phases: the encoding phase and the decoding phase. During encoding phase the input sequence is fed to a Recurrent Neural Network and the necessary information is captured inside the hidden state. After a special  symbol is passed which indicates the end of the input sequence the network uses the hidden state to produce and the previous output to produce the current input. Please look at \autoref{fig:sequnce-network} for a visualization. This architecture is very effective especially when used together with an attention mechanism since it can deal with unaligned sequences and sequences of different length.
+
+\begin{figure}[htpb]
+    \includegraphics[width=\linewidth]{zmatrix.png}
+    \caption{Architecture of the Synchronized Sequence to Sequence Network}
+    \label{fig:sequnce-network}
+\end{figure}
 
 We use the synchronized sequence to sequence model since we know that the sizes of the two sequences are the same and each 2D pose in the sequence is corresponding to 3D pose element. This makes the connection pattern for the network much simpler. In this architecture the Recurrent Neural Network is fed the input sequence and produces a prediction every time step. The loss is defined for each time step as well.
 
@@ -171,7 +207,13 @@ For the comparison of the results please look at \autoref{tab:seq-comp}
 \end{table}
 
 
-Here are examples of pose estimates shown in Figure 4.8
+Here are examples of pose estimates shown in \autoref{fig:sequence-examples}
+
+\begin{figure}[htpb]
+    \includegraphics[width=\linewidth]{zmatrix.png}
+    \caption{Example 2D inputs 3D ground truth and our model's predictions}
+    \label{fig:sequence-examples}
+\end{figure}
 
 \subsubsection{Discussion}
 
@@ -246,7 +288,13 @@ For the comparison of the results please look at \autoref{tab:structural-comp}
 \end{table}
 
 
-Here are examples of pose estimates shown in Figure 4.9
+Here are examples of pose estimates shown in \autoref{fig:structural-examples}
+
+\begin{figure}[htpb]
+    \includegraphics[width=\linewidth]{zmatrix.png}
+    \caption{Example 2D inputs 3D ground truth and the Structural Sequence Network's predictions}
+    \label{fig:structural-examples}
+\end{figure}
 
 Comparison between the final model and previous models are at \autoref{tab:final-comp}
 
@@ -264,7 +312,13 @@ Comparison between the final model and previous models are at \autoref{tab:final
 \end{table}
 
 
-Comparative visualizations can be seen in Figure 4.10
+Comparative visualizations can be seen in \autoref{fig:final-examples}
+
+\begin{figure}[htpb]
+    \includegraphics[width=\linewidth]{zmatrix.png}
+    \caption{Example 2D inputs 3D ground truth and the Final Network's predictions}
+    \label{fig:final-examples}
+\end{figure}
 
 \subsubsection{Discussion}
 
