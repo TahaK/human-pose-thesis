@@ -3,7 +3,7 @@
 
 \chapter{3D Pose Estimation}\label{chapter:3Dpose}
 
-This chapter examines the 3D pose estimation problem. In this chapter we train three models and examine what each design choice and present the qualitative and quantitative results. All models take the x-y pixel location as input and produce 3D joint locations in the mm space. While the second and third model take the input in sequences the first model takes in frame by frame. The main problems we aim to solve in 3D pose estimation are:
+This chapter examines the 3D pose estimation problem. In this chapter we train three models and examine what each design choice offers and present the qualitative and quantitative results. All models take the x-y pixel location of joints as input and produce 3D joint locations in the mm space. While the second and third model take the input in sequences the first model takes in frame by frame. The main problems we aim to solve in 3D pose estimation are:
 \begin{itemize}
     \item Being invariant to the viewpoint of the camera
     \item Dealing with missing joints in the sequence
@@ -89,7 +89,7 @@ Our model estimates the 3D pose $\theta \in R^{3\times N}$ given the 2D pose $X 
 
 \subsection{Training details}
 
-We trained our model for 100 epochs with batch size is 16384. Large batch training has shown a lot of promise recently \parencite{you2017imagenet}, \parencite{goyal2017accurate}. In our case training with such a high batch size enabled us to train much faster since we could utilize the GPU hardware much more effectively. Adding augmentations meant that we would have much more data to process. For example when using 40 virtual cameras the dataset size for Human3.6M dataset would effectively increase 10 times. This enabled us to train with a faster rate and explore a wider range of architectures and hyper-parameters. We observed that having large batch sizes didn't affect the performance negatively if other hyper-parameters are adjusted as well. For the optimizer we used the ADAM optimizer with learning rate is 0.001. For the wight initialization we used He initialization when training with ReLU activation and SELU activation is initialized with normal distribution with mean zero and variance $\sqrt(2 / n)$ where n denotes number of hidden units in the previous layer. 
+We trained our model for 100 epochs with batch size is 16384. Large batch training has shown a lot of promise recently \parencite{you2017imagenet}, \parencite{goyal2017accurate}. In our case training with such a high batch size enabled us to train much faster since we could utilize the GPU hardware much more effectively. Adding augmentations meant that we would have much more data to process. For example when using 40 virtual cameras the dataset size for Human3.6M dataset would effectively increase 10 times. Large batch training enabled us to train with a faster rate and explore a wider range of architectures and hyper-parameters. We observed that having large batch sizes didn't affect the performance negatively if other hyper-parameters are adjusted as well. For the optimizer we used the ADAM optimizer with learning rate is 0.001. For the wight initialization we used He initialization when training with ReLU activation and SELU activation is initialized with normal distribution with mean zero and variance $\sqrt(2 / n)$ where n denotes number of hidden units in the previous layer. 
 
 \subsection{Evaluation}
 
