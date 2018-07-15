@@ -78,13 +78,49 @@ The gait dataset contains more than 77000 videos where each video containing aro
 For qualitative evaluation of the 2D pose estimates we show accurate estimates together with failure cases in \autoref{fig:gait-failure}. The pose prediction has certain obvious limitations some due to the limited view point of the camera and some related with pose prediction algorithm's performance. 
 
 \begin{figure}[htpb]
-    \includegraphics[width=\linewidth]{zmatrix.png}
-    \caption{Visualization of the Z-matrix}
+	\centering
+	\begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp8.png}
+    	\caption{Head not in scene}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp19.png}
+    	\caption{the frame after (a)}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp9.png}
+    	\caption{Out of view}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp11.png}
+    	\caption{Out of view}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp14.png}
+    	\caption{Sitting person}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp15.png}
+    	\caption{the frame after (e)}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp3.png}
+    	\caption{Out of view}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp5.png} 
+    	\caption{Obscured view}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp1.png} 
+    	\caption{Faced away }
+    \end{subfigure}
+    \caption{2D pose estimation failures in edge cases}
     \label{fig:gait-failure}
 \end{figure}
 
 \begin{itemize}
-    \item The detection is not possible when the subject is not visible in the beginning or in the end of the sequence. See \autoref{fig:gait-failure} and \autoref{fig:gait-failure}
-    \item The detection is generally less successful  when the subject turns his or her back to the camera especially the eyes, ears and head detection. \autoref{fig:gait-failure} and\autoref{fig:gait-failure}
-    \item There are missing joints during the sequence sometimes in the middle of the sequence. \autoref{fig:gait-failure} and \autoref{fig:gait-failure}
+    \item The detection is not possible when the subject is not visible in the beginning or in the end of the sequence. See \autoref{fig:gait-failure} (d), (g) and \autoref{fig:gait-failure} (c)
+    \item The detection is generally less successful  when the subject turns his or her back to the camera especially the eyes, ears and head detection. \autoref{fig:gait-failure} (i)
+    \item There are missing joints during the sequence sometimes in the middle of the sequence. \autoref{fig:gait-failure} (a) - (b), (c), (g) and (e)- (f)
 \end{itemize}

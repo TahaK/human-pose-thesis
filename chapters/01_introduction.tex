@@ -1,6 +1,7 @@
 % !TeX root = ../main.tex
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
+
 \chapter{Introduction}\label{chapter:introduction}
 
 Curiosity is one of our main drives. Even in babies the desire to model the world helps them endure many of the difficulties of exploring it. A baby might stumble, fall, get burnt or scratched but still will continue to be relentlessly curious trying to construct a useful model of the world. An important part of this model is understanding and recognizing other people. This is due to the fact that humans are fundamentally social animals. Our ability to communicate with each other in a sophisticated way sets us apart from all other animals. The first step of this communication occurs before we even open our mouths when we recognize each other physically, gauge each others posture, and detect other non-verbal clues. Recognizing other people enables us to respond to each others actions, cooperate or compete with each other. This is so central to our lives that it is unimaginable to operate in a world without this ability. 
@@ -18,7 +19,19 @@ The dataset that we developed our application for was created by the administrat
 The gait dataset consist of both gait statistics calculated from the pressure carpet and a web-cam footage of the gait sequence. Our aim in this thesis was to utilize the monocular video data to estimate the gait parameters. The gait footage is captured from roughly the direction of the pressure carpet. This makes the distance estimation and therefore the gait statistics calculations a significant problem. An example of the footage can be seen in \autoref{fig:gait-footage}
 
 \begin{figure}[htpb]
-    \includegraphics[width=\linewidth]{zmatrix.png}
+	\centering
+	\begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp2.png}
+    	\caption{Walking Away from the camera}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp13.png}
+    	\caption{Walking towards the camera}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp17.png}
+    	\caption{Walking while holding a tray}
+    \end{subfigure}
     \caption{Example frames from the gait dataset}
     \label{fig:gait-footage}
 \end{figure}
@@ -54,16 +67,40 @@ The main problem we are trying to solve is estimating z-matrix values for the vi
 
 There are several considerations that need to be regarded when designing a solution for this problem. 
 \begin{itemize}
-    \item The gait videos can sometime contain together with the person who is taking the gait test an administrator who is standing next to the patient or sitting in the other side of the room. See \autoref{fig:gait-problems} and \autoref{fig:gait-problems}
-    \item Portions of the body of the subject is not visible in the beginning or end of videos due to the placement of the camera.
-    \item All joints can not be detected in all frames. For example, when the patient is walking away from the camera the nose joint can not be detected throughout the video. See \autoref{fig:gait-problems}
-    \item The viewing angles of the training datasets and camera positioning of the gait videos are drastically different. See \autoref{fig:gait-problems}
-    \item During the gait videos the patient is walking either towards or away from the camera. This forces the model to be invariant to different distances.
-    \item The patients have different heights and body compositions. This constitutes another source of ambiguity, since it is not clear given a 2D projection whether the person is tall and farther away from the camera or small and close to the camera. See \autoref{fig:gait-problems}
+    \item The gait videos can sometime contain together with the person who is taking the gait test an administrator who is standing next to the patient or sitting in the other side of the room. See \autoref{fig:gait-problems} (a) and (c)
+    \item Portions of the body of the subject is not visible in the beginning or end of videos due to the placement of the camera. \autoref{fig:gait-problems} (b) and (e)
+    \item All joints can not be detected in all frames. For example, when the patient is walking away from the camera the nose joint can not be detected throughout the video. See \autoref{fig:gait-problems} (a)
+    \item The viewing angles of the training datasets and camera positioning of the gait videos are drastically different. See \autoref{fig:gait-problems} (a) and (b)
+    \item During the gait videos the patient is walking either towards or away from the camera. This forces the model to be invariant to different distances. See \autoref{fig:gait-problems} (e) and (f)
+    \item The patients have different heights and body compositions. This constitutes another source of ambiguity, since it is not clear given a 2D projection whether the person is tall and farther away from the camera or small and close to the camera. See \autoref{fig:gait-problems} (a) and (f)
 \end{itemize}
 
 \begin{figure}[htpb]
-    \includegraphics[width=\linewidth]{zmatrix.png}
+	\centering
+	\begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp2.png}
+    	\caption{Two People in Scene}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp4.png}
+    	\caption{Out of camera view}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp6.png}
+    	\caption{Obscured view}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp17.png}
+    	\caption{Person sitting}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp21.png}
+    	\caption{No noise joint}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+   		\includegraphics[width=\linewidth]{gp20.png}
+    	\caption{Small apparent size}
+    \end{subfigure}
     \caption{Example frames from the gait dataset illustraiting various challenging situations}
     \label{fig:gait-problems}
 \end{figure}
